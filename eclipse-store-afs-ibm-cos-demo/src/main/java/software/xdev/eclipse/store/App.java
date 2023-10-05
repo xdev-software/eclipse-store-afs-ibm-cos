@@ -6,8 +6,6 @@ import java.util.List;
 import org.eclipse.store.afs.blobstore.types.BlobStoreFileSystem;
 import org.eclipse.store.storage.embedded.types.EmbeddedStorage;
 import org.eclipse.store.storage.embedded.types.EmbeddedStorageManager;
-import org.eclipse.store.storage.types.Storage;
-import org.eclipse.store.storage.types.StorageLiveFileProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -54,18 +52,9 @@ public class App
 			CosConnector.Caching(client)
 		);
 		
-		return EmbeddedStorage.Foundation(
-				Storage.ConfigurationBuilder()
-					.setChannelCountProvider(Storage.ChannelCountProvider(4))
-					.setStorageFileProvider(
-						StorageLiveFileProvider.Builder()
-							.setDirectory(cloudFileSystem.ensureDirectoryPath(BUCKET_NAME))
-							.createFileProvider()
-					)
-					.createConfiguration()
-			)
-			.setRoot(root)
-			.start();
+		return EmbeddedStorage.start(
+			root,
+			cloudFileSystem.ensureDirectoryPath(BUCKET_NAME));
 	}
 	
 	public static AmazonS3 createClient(
