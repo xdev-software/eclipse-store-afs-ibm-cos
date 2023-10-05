@@ -5,11 +5,17 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.xdev-software</groupId>
-	<artifactId>standard-maven-template-demo</artifactId>
+	<artifactId>eclipse-store-afs-ibm-cos-demo</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
-	<inceptionYear>2022</inceptionYear>
+	<inceptionYear>2023</inceptionYear>
+
+	<parent>
+		<groupId>com.xdev-software</groupId>
+		<artifactId>eclipse-store-afs-ibm-cos-root</artifactId>
+		<version>1.0.0-SNAPSHOT</version>
+	</parent>
 
 	<organization>
 		<name>XDEV Software</name>
@@ -17,20 +23,21 @@
 	</organization>
 
 	<properties>
-		<javaVersion>17</javaVersion>
-		<maven.compiler.release>${javaVersion}</maven.compiler.release>
-
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-
-		<mainClass>software.xdev.Application</mainClass>
+		<mainClass>software.xdev.eclipse.store.App</mainClass>
 	</properties>
 
 	<dependencies>
 		<dependency>
 			<groupId>com.xdev-software</groupId>
-			<artifactId>standard-maven-template</artifactId>
+			<artifactId>eclipse-store-afs-ibm-cos</artifactId>
 			<version>${project.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.eclipse.store</groupId>
+			<artifactId>storage-embedded</artifactId>
+			<version>${org.eclipse.store.version}</version>
+			<scope>compile</scope>
 		</dependency>
 	</dependencies>
 

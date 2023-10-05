@@ -5,7 +5,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.xdev-software</groupId>
-	<artifactId>standard-maven-template-root</artifactId>
+	<artifactId>eclipse-store-afs-ibm-cos-root</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
@@ -14,9 +14,18 @@
 		<url>https://xdev.software</url>
 	</organization>
 
+	<properties>
+		<!-- Keep this compatible with EclipseStore -->
+		<javaVersion>11</javaVersion>
+		<maven.compiler.release>${javaVersion}</maven.compiler.release>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<org.eclipse.store.version>1.0.0-SNAPSHOT</org.eclipse.store.version>
+	</properties>
+
 	<modules>
-		<module>standard-maven-template</module>
-		<module>standard-maven-template-demo</module>
+		<module>eclipse-store-afs-ibm-cos</module>
+		<module>eclipse-store-afs-ibm-cos-demo</module>
 	</modules>
 
 	<licenses>
