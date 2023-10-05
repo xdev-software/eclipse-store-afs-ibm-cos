@@ -27,9 +27,9 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 import org.eclipse.serializer.exceptions.IORuntimeException;
-import org.eclipse.storage.afs.blobstore.types.BlobStoreConnector;
-import org.eclipse.storage.afs.blobstore.types.BlobStorePath;
-import org.eclipse.storage.base.io.ByteBufferInputStream;
+import org.eclipse.serializer.io.ByteBufferInputStream;
+import org.eclipse.store.afs.blobstore.types.BlobStoreConnector;
+import org.eclipse.store.afs.blobstore.types.BlobStorePath;
 
 import com.ibm.cloud.objectstorage.SdkClientException;
 import com.ibm.cloud.objectstorage.services.s3.AmazonS3;

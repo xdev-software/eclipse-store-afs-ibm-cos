@@ -18,9 +18,9 @@ package software.xdev.eclipse.store.afs.ibm.types;
 import java.util.Optional;
 
 import org.eclipse.serializer.afs.types.AFileSystem;
-import org.eclipse.storage.configuration.exceptions.ConfigurationException;
-import org.eclipse.storage.configuration.types.Configuration;
-import org.eclipse.storage.configuration.types.ConfigurationBasedCreator;
+import org.eclipse.serializer.configuration.exceptions.ConfigurationException;
+import org.eclipse.serializer.configuration.types.Configuration;
+import org.eclipse.serializer.configuration.types.ConfigurationBasedCreator;
 
 import com.ibm.cloud.objectstorage.auth.BasicAWSCredentials;
 import com.ibm.cloud.objectstorage.auth.DefaultAWSCredentialsProviderChain;

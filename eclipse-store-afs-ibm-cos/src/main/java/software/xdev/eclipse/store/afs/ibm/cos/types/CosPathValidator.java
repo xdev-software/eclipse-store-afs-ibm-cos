@@ -17,7 +17,7 @@ package software.xdev.eclipse.store.afs.ibm.cos.types;
 
 import java.util.regex.Pattern;
 
-import org.eclipse.storage.afs.blobstore.types.BlobStorePath;
+import org.eclipse.store.afs.blobstore.types.BlobStorePath;
 
 
 public interface CosPathValidator extends BlobStorePath.Validator

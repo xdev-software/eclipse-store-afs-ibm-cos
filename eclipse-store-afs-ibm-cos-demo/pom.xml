@@ -26,6 +26,19 @@
 		<mainClass>software.xdev.eclipse.store.App</mainClass>
 	</properties>
 
+	<repositories>
+		<repository>
+			<id>ossrh</id>
+			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
+
 	<dependencies>
 		<dependency>
 			<groupId>com.xdev-software</groupId>
@@ -37,7 +50,6 @@
 			<groupId>org.eclipse.store</groupId>
 			<artifactId>storage-embedded</artifactId>
 			<version>${org.eclipse.store.version}</version>
-			<scope>compile</scope>
 		</dependency>
 	</dependencies>
 

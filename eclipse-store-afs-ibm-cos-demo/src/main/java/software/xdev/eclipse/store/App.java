@@ -3,7 +3,7 @@ package software.xdev.eclipse.store;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.storage.afs.blobstore.types.BlobStoreFileSystem;
+import org.eclipse.store.afs.blobstore.types.BlobStoreFileSystem;
 import org.eclipse.store.storage.embedded.types.EmbeddedStorage;
 import org.eclipse.store.storage.embedded.types.EmbeddedStorageManager;
 import org.eclipse.store.storage.types.Storage;

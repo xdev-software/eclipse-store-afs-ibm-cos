@@ -16,8 +16,8 @@
 package software.xdev.eclipse.store.afs.ibm.cos.types;
 
 import org.eclipse.serializer.afs.types.AFileSystem;
-import org.eclipse.storage.afs.blobstore.types.BlobStoreFileSystem;
-import org.eclipse.storage.configuration.types.Configuration;
+import org.eclipse.serializer.configuration.types.Configuration;
+import org.eclipse.store.afs.blobstore.types.BlobStoreFileSystem;
 
 import com.ibm.cloud.objectstorage.client.builder.AwsClientBuilder;
 import com.ibm.cloud.objectstorage.services.s3.AmazonS3;
