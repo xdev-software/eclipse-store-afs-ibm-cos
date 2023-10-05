@@ -1,19 +1,39 @@
-[![Latest version](https://img.shields.io/maven-central/v/com.xdev-software/standard-maven-template?logo=apache%20maven)](https://mvnrepository.com/artifact/com.xdev-software/standard-maven-template)
-[![Build](https://img.shields.io/github/actions/workflow/status/xdev-software/standard-maven-template/checkBuild.yml?branch=develop)](https://github.com/xdev-software/standard-maven-template/actions/workflows/checkBuild.yml?query=branch%3Adevelop)
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=xdev-software_standard-maven-template&metric=alert_status)](https://sonarcloud.io/dashboard?id=xdev-software_standard-maven-template)
+[![Latest version](https://img.shields.io/maven-central/v/com.xdev-software/eclipse-store-afs-ibm-cos?logo=apache%20maven)](https://mvnrepository.com/artifact/com.xdev-software/eclipse-store-afs-ibm-cos)
+[![Build](https://img.shields.io/github/actions/workflow/status/xdev-software/eclipse-store-afs-ibm-cos/checkBuild.yml?branch=develop)](https://github.com/xdev-software/eclipse-store-afs-ibm-cos/actions/workflows/checkBuild.yml?query=branch%3Adevelop)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=xdev-software_eclipse-store-afs-ibm-cos&metric=alert_status)](https://sonarcloud.io/dashboard?id=xdev-software_eclipse-store-afs-ibm-cos)
 
-# standard-maven-template
+# eclipse-store-afs-ibm-cos
 
+A connector for the [EclipseStore](https://eclipsestore.io/) which allows storing data in
+the [IBM Cloud Object Storage](https://www.ibm.com/cloud/object-storage).
+
+It uses the [IBM-provided Java SDK](https://github.com/IBM/ibm-cos-sdk-java).
+
+> **Note**
+> This library is still version 0.0.1 since EclipseStore is not yet released in version 1.0.0.
 
 ## Installation
-[Installation guide for the latest release](https://github.com/xdev-software/standard-maven-template/releases/latest#Installation)
 
+[Installation guide for the latest release](https://github.com/xdev-software/eclipse-store-afs-ibm-cos/releases/latest#Installation)
+
+## Supported EclipseStore versions
+
+The connector supports
+[version 1.0.0 of the EclipseStore](https://central.sonatype.dev/artifact/org.eclipse.store/storage-embedded/01.00.00).
+
+If you are using a different, not listed version of EclipseStore, this shouldn't be a problem.
+Usually you can simply exclude the dependent version of EclipseStore.
 
 ## Support
-If you need support as soon as possible and you can't wait for any pull request, feel free to use [our support](https://xdev.software/en/services/support).
+
+If you need support as soon as possible and you can't wait for any pull request, feel free to
+use [our support](https://xdev.software/en/services/support).
 
 ## Contributing
+
 See the [contributing guide](./CONTRIBUTING.md) for detailed instructions on how to get started with our project.
 
 ## Dependencies and Licenses
-View the [license of the current project](LICENSE) or the [summary including all dependencies](https://xdev-software.github.io/standard-maven-template/dependencies/)
+
+View the [license of the current project](LICENSE) or
+the [summary including all dependencies](https://xdev-software.github.io/eclipse-store-afs-ibm-cos/dependencies/)

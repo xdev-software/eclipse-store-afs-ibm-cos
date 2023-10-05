@@ -30,6 +30,9 @@ public class App
 	
 	private static final Logger LOG = LoggerFactory.getLogger(App.class);
 	
+	/**
+	 * This function connects to the IBM COS and writes one million String-Entries on it.
+	 */
 	public static void main(final String[] args)
 	{
 		final List<String> stringList = new ArrayList<>();
