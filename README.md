@@ -9,6 +9,11 @@ the [IBM Cloud Object Storage](https://www.ibm.com/cloud/object-storage).
 
 It uses the [IBM-provided Java SDK](https://github.com/IBM/ibm-cos-sdk-java).
 
+The connector works virtually identical to
+the [AWS S3 Connector](https://docs.eclipsestore.io/manual/storage/storage-targets/blob-stores/aws-s3.html) of
+EclipseStore
+but for IBM COS instead of AWS S3.
+
 > **Note**
 > This library is still version 0.0.1 since EclipseStore is not yet released in version 1.0.0.
 
@@ -19,7 +24,7 @@ It uses the [IBM-provided Java SDK](https://github.com/IBM/ibm-cos-sdk-java).
 ## Supported EclipseStore versions
 
 The connector supports
-[version 1.0.0 of the EclipseStore](https://central.sonatype.dev/artifact/org.eclipse.store/storage-embedded/01.00.00).
+[version 1.0.0 of the EclipseStore](https://central.sonatype.com//artifact/org.eclipse.store/storage-embedded/01.00.00).
 
 If you are using a different, not listed version of EclipseStore, this shouldn't be a problem.
 Usually you can simply exclude the dependent version of EclipseStore.
