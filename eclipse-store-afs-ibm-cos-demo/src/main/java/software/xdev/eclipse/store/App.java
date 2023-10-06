@@ -70,13 +70,11 @@ public class App
 		final ClientConfiguration clientConfig = new ClientConfiguration().withRequestTimeout(-1);
 		clientConfig.setUseTcpKeepAlive(true);
 		
-		final AmazonS3 cos = AmazonS3ClientBuilder.standard()
+		return AmazonS3ClientBuilder.standard()
 			.withCredentials(new AWSStaticCredentialsProvider(credentials))
 			.withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(endpoint_url, location))
 			.withPathStyleAccessEnabled(true)
 			.withClientConfiguration(clientConfig)
 			.build();
-		
-		return cos;
 	}
 }
