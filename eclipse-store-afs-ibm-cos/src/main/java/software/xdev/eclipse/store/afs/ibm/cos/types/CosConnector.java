@@ -122,8 +122,7 @@ public interface CosConnector extends BlobStoreConnector
 				.getObjectSummaries()
 				.stream()
 				.filter(obj -> pattern.matcher(obj.getKey()).matches())
-				.sorted(this.blobComparator())
-				;
+				.sorted(this.blobComparator());
 		}
 		
 		@Override
@@ -138,8 +137,7 @@ public interface CosConnector extends BlobStoreConnector
 			return this.s3.listObjectsV2(request)
 				.getObjectSummaries()
 				.stream()
-				.map(S3ObjectSummary::getKey)
-				;
+				.map(S3ObjectSummary::getKey);
 		}
 		
 		@Override
@@ -187,7 +185,6 @@ public interface CosConnector extends BlobStoreConnector
 		)
 		{
 			this.s3.putObject(directory.container(), toContainerKey(directory), "");
-			
 			return true;
 		}
 		
