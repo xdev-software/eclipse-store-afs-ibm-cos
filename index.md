@@ -24,7 +24,7 @@ but for IBM COS instead of AWS S3.
 ## Supported EclipseStore versions
 
 The connector supports
-[version 1.0.0 of the EclipseStore](https://central.sonatype.com//artifact/org.eclipse.store/storage-embedded/01.00.00).
+[version 1.0.0 of the EclipseStore](https://central.sonatype.com/artifact/org.eclipse.store/storage-embedded/01.00.00).
 
 If you are using a different, not listed version of EclipseStore, this shouldn't be a problem.
 Usually you can simply exclude the dependent version of EclipseStore.
