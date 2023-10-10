@@ -6,23 +6,24 @@
 
 	<groupId>com.xdev-software</groupId>
 	<artifactId>eclipse-store-afs-ibm-cos-demo</artifactId>
-	<version>0.0.3-SNAPSHOT</version>
+	<version>0.0.2-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<inceptionYear>2023</inceptionYear>
-
-	<parent>
-		<groupId>com.xdev-software</groupId>
-		<artifactId>eclipse-store-afs-ibm-cos-root</artifactId>
-		<version>0.0.2-SNAPSHOT</version>
-	</parent>
 
 	<organization>
 		<name>XDEV Software</name>
 		<url>https://xdev.software</url>
 	</organization>
 
+
 	<properties>
+		<!-- Keep this compatible with EclipseStore -->
+		<javaVersion>11</javaVersion>
+		<maven.compiler.release>${javaVersion}</maven.compiler.release>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<org.eclipse.store.version>1.0.0-SNAPSHOT</org.eclipse.store.version>
 		<mainClass>software.xdev.eclipse.store.App</mainClass>
 	</properties>
 
