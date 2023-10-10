@@ -30,6 +30,9 @@ public class App
 	
 	private static final Logger LOG = LoggerFactory.getLogger(App.class);
 	
+	/**
+	 * This function connects to the IBM COS and writes one million String-Entries on it.
+	 */
 	public static void main(final String[] args)
 	{
 		final List<String> stringList = new ArrayList<>();
@@ -67,13 +70,11 @@ public class App
 		final ClientConfiguration clientConfig = new ClientConfiguration().withRequestTimeout(-1);
 		clientConfig.setUseTcpKeepAlive(true);
 		
-		final AmazonS3 cos = AmazonS3ClientBuilder.standard()
+		return AmazonS3ClientBuilder.standard()
 			.withCredentials(new AWSStaticCredentialsProvider(credentials))
 			.withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(endpoint_url, location))
 			.withPathStyleAccessEnabled(true)
 			.withClientConfiguration(clientConfig)
 			.build();
-		
-		return cos;
 	}
 }
