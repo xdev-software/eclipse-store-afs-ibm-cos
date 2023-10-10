@@ -15,7 +15,7 @@ EclipseStore
 but for IBM COS instead of AWS S3.
 
 > **Note**
-> This library is still version 0.0.1 since EclipseStore is not yet released in version 1.0.0.
+> This library is still version 0.0.2 since EclipseStore is not yet released in version 1.0.0.
 
 ## Installation
 
