@@ -26,7 +26,7 @@
 		<maven.compiler.release>${javaVersion}</maven.compiler.release>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<ibm.java.sdk.version>2.13.2</ibm.java.sdk.version>
+		<ibm.java.sdk.version>2.13.3</ibm.java.sdk.version>
 		<org.eclipse.store.version>1.0.0-SNAPSHOT</org.eclipse.store.version>
 		<org.eclipse.serializer.version>1.0.0-SNAPSHOT</org.eclipse.serializer.version>
 	</properties>
