@@ -14,9 +14,6 @@ the [AWS S3 Connector](https://docs.eclipsestore.io/manual/storage/storage-targe
 EclipseStore
 but for IBM COS instead of AWS S3.
 
-> **Note**
-> This library is still version 0.0.2 since EclipseStore is not yet released in version 1.0.0.
-
 ## Installation
 
 [Installation guide for the latest release](https://github.com/xdev-software/eclipse-store-afs-ibm-cos/releases/latest#Installation)

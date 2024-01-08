@@ -39,11 +39,13 @@ public class App
 		LOG.info("List size before loading: {}", stringList.size());
 		try(final EmbeddedStorageManager manager = getStorageManager(stringList))
 		{
+			LOG.info("List size after loading: {}", stringList.size());
 			for(int i = 0; i < 1_000_000; i++)
 			{
 				stringList.add("Test" + i);
 			}
 			manager.store(stringList);
+			LOG.info("List size after storing new entities: {}", stringList.size());
 		}
 	}
 	
