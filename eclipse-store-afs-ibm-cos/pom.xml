@@ -20,17 +20,6 @@
 
 	<inceptionYear>2023</inceptionYear>
 
-	<properties>
-		<!-- Keep this compatible with EclipseStore -->
-		<javaVersion>11</javaVersion>
-		<maven.compiler.release>${javaVersion}</maven.compiler.release>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<ibm.java.sdk.version>2.13.2</ibm.java.sdk.version>
-		<org.eclipse.store.version>1.0.0</org.eclipse.store.version>
-		<org.eclipse.serializer.version>1.0.0</org.eclipse.serializer.version>
-	</properties>
-
 	<organization>
 		<name>XDEV Software</name>
 		<url>https://xdev.software</url>
@@ -52,30 +41,19 @@
 		</license>
 	</licenses>
 
-	<repositories>
-		<!-- The order of definitions matters. Explicitly defining central here 
-			to make sure it has the highest priority. -->
-		<repository>
-			<id>central</id>
-			<url>https://repo.maven.apache.org/maven2</url>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</repository>
-	</repositories>
+	<properties>
+		<javaVersion>11</javaVersion>
+		<maven.compiler.release>${javaVersion}</maven.compiler.release>
+
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+		<ibm.java.sdk.version>2.13.2</ibm.java.sdk.version>
+		<org.eclipse.store.version>1.0.0</org.eclipse.store.version>
+		<org.eclipse.serializer.version>1.0.0</org.eclipse.serializer.version>
+	</properties>
 
 	<dependencies>
-		<dependency>
-			<groupId>org.apache.maven.plugins</groupId>
-			<artifactId>maven-gpg-plugin</artifactId>
-			<version>3.1.0</version>
-		</dependency>
-		<dependency>
-			<groupId>org.sonatype.plugins</groupId>
-			<artifactId>nexus-staging-maven-plugin</artifactId>
-			<version>1.6.13</version>
-		</dependency>
-
 		<dependency>
 			<groupId>com.ibm.cos</groupId>
 			<artifactId>ibm-cos-java-sdk-core</artifactId>
@@ -103,6 +81,18 @@
 			<version>${org.eclipse.serializer.version}</version>
 		</dependency>
 	</dependencies>
+
+	<repositories>
+		<!-- The order of definitions matters. Explicitly defining central here 
+			to make sure it has the highest priority. -->
+		<repository>
+			<id>central</id>
+			<url>https://repo.maven.apache.org/maven2</url>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
 
 	<pluginRepositories>
 		<!-- The order of definitions matters. Explicitly defining central here 

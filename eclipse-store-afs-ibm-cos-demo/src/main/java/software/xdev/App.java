@@ -1,4 +1,4 @@
-package software.xdev.eclipse.store;
+package software.xdev;
 
 import java.util.ArrayList;
 import java.util.List;
