@@ -1,4 +1,4 @@
-[![Latest version](https://img.shields.io/maven-central/v/com.xdev-software/eclipse-store-afs-ibm-cos?logo=apache%20maven)](https://mvnrepository.com/artifact/com.xdev-software/eclipse-store-afs-ibm-cos)
+[![Latest version](https://img.shields.io/maven-central/v/software.xdev/eclipse-store-afs-ibm-cos?logo=apache%20maven)](https://mvnrepository.com/artifact/software.xdev/eclipse-store-afs-ibm-cos)
 [![Build](https://img.shields.io/github/actions/workflow/status/xdev-software/eclipse-store-afs-ibm-cos/checkBuild.yml?branch=develop)](https://github.com/xdev-software/eclipse-store-afs-ibm-cos/actions/workflows/checkBuild.yml?query=branch%3Adevelop)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=xdev-software_eclipse-store-afs-ibm-cos&metric=alert_status)](https://sonarcloud.io/dashboard?id=xdev-software_eclipse-store-afs-ibm-cos)
 

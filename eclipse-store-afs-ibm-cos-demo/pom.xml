@@ -4,7 +4,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>com.xdev-software</groupId>
+	<groupId>software.xdev</groupId>
 	<artifactId>eclipse-store-afs-ibm-cos-demo</artifactId>
 	<version>1.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
@@ -42,7 +42,7 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>com.xdev-software</groupId>
+			<groupId>software.xdev</groupId>
 			<artifactId>eclipse-store-afs-ibm-cos</artifactId>
 			<version>${project.version}</version>
 		</dependency>
@@ -67,7 +67,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.11.0</version>
+				<version>3.12.1</version>
 				<configuration>
 					<release>${maven.compiler.release}</release>
 					<compilerArgs>
@@ -105,4 +105,35 @@
 			</plugin>
 		</plugins>
 	</build>
+	<profiles>
+		<profile>
+			<id>checkstyle</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-checkstyle-plugin</artifactId>
+						<version>3.3.1</version>
+						<dependencies>
+							<dependency>
+								<groupId>com.puppycrawl.tools</groupId>
+								<artifactId>checkstyle</artifactId>
+								<version>10.12.7</version>
+							</dependency>
+						</dependencies>
+						<configuration>
+							<configLocation>../.config/checkstyle/checkstyle.xml</configLocation>
+						</configuration>
+						<executions>
+							<execution>
+								<goals>
+									<goal>check</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 </project>
