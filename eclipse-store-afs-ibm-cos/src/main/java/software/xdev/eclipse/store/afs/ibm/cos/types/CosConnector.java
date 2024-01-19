@@ -20,6 +20,7 @@ import static org.eclipse.serializer.util.X.notNull;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
+import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -55,6 +56,7 @@ import com.ibm.cloud.objectstorage.services.s3.model.S3ObjectSummary;
  * );
  * </pre>
  */
+@SuppressWarnings("checkstyle:MethodName") // MS Naming
 public interface CosConnector extends BlobStoreConnector
 {
 	/**
@@ -172,14 +174,6 @@ public interface CosConnector extends BlobStoreConnector
 		}
 		
 		@Override
-		protected boolean internalFileExists(
-			final BlobStorePath file
-		)
-		{
-			return super.internalFileExists(file);
-		}
-		
-		@Override
 		protected boolean internalCreateDirectory(
 			final BlobStorePath directory
 		)
@@ -216,9 +210,9 @@ public interface CosConnector extends BlobStoreConnector
 				ByteBufferInputStream.New(sourceBuffers)
 			))
 			{
-				final int bufferSum = StreamSupport.stream(sourceBuffers.spliterator(), false).mapToInt(
-					buffer -> buffer.limit()
-				).sum();
+				final int bufferSum = StreamSupport.stream(sourceBuffers.spliterator(), false)
+					.mapToInt(Buffer::limit)
+					.sum();
 				
 				final ObjectMetadata objectMetadata = new ObjectMetadata();
 				objectMetadata.setContentLength(bufferSum);

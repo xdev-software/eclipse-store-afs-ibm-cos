@@ -1,8 +1,6 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Run Demo" type="Application" factoryName="Application">
-    <option name="ALTERNATIVE_JRE_PATH" value="BUNDLED" />
-    <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
-    <option name="MAIN_CLASS_NAME" value="software.xdev.eclipse.store.App" />
+    <option name="MAIN_CLASS_NAME" value="software.xdev.Application" />
     <module name="eclipse-store-afs-ibm-cos-demo" />
     <option name="WORKING_DIRECTORY" value="$MODULE_DIR$" />
     <extension name="coverage">
