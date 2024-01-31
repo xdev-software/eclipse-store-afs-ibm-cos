@@ -54,14 +54,21 @@ public final class App
 	public static EmbeddedStorageManager getStorageManager(final Object root)
 	{
 		final AmazonS3 client = createClient(COS_API_KEY_ID, COS_SERVICE_CRN, COS_ENDPOINT, COS_BUCKET_LOCATION);
+		
+		LOG.info("Start creating file system");
 		final BlobStoreFileSystem cloudFileSystem = BlobStoreFileSystem.New(
 			// use caching connector
 			CosConnector.Caching(client)
 		);
+		LOG.info("Finished creating file system");
 		
-		return EmbeddedStorage.start(
+		LOG.info("Starting storage manager");
+		final EmbeddedStorageManager storageManager = EmbeddedStorage.start(
 			root,
 			cloudFileSystem.ensureDirectoryPath(BUCKET_NAME));
+		LOG.info("Finished storage manager");
+		
+		return storageManager;
 	}
 	
 	public static AmazonS3 createClient(
@@ -70,16 +77,19 @@ public final class App
 		final String endpointUrl,
 		final String location)
 	{
+		LOG.info("Start creating client");
 		final AWSCredentials credentials = new BasicIBMOAuthCredentials(apiKey, serviceInstanceId);
 		final ClientConfiguration clientConfig = new ClientConfiguration().withRequestTimeout(-1);
 		clientConfig.setUseTcpKeepAlive(true);
 		
-		return AmazonS3ClientBuilder.standard()
+		final AmazonS3 build = AmazonS3ClientBuilder.standard()
 			.withCredentials(new AWSStaticCredentialsProvider(credentials))
 			.withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(endpointUrl, location))
 			.withPathStyleAccessEnabled(true)
 			.withClientConfiguration(clientConfig)
 			.build();
+		LOG.info("Finished creating client");
+		return build;
 	}
 	
 	private App()
