@@ -16,14 +16,15 @@ The connector works virtually identical to the [AWS S3 Connector](https://docs.e
 
 ## Supported EclipseStore versions
 
-The connector supports [version 1.0.0 of the EclipseStore](https://central.sonatype.com/artifact/org.eclipse.store/storage-embedded/01.00.00).
+The connector
+supports [version 1.1.0 of the EclipseStore](https://central.sonatype.com/artifact/org.eclipse.store/storage-embedded/01.01.00).
 
 If you are using a different, not listed version of EclipseStore, this shouldn't be a problem.
 Usually you can simply exclude the dependent version of EclipseStore.
 
 ## Support
 
-If you need support as soon as possible and you can't wait for any pull request, feel free to
+If you need support as soon as possible, and you can't wait for any pull request, feel free to
 use [our support](https://xdev.software/en/services/support).
 
 ## Contributing
