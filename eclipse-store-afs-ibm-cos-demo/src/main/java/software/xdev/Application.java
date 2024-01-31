@@ -21,7 +21,7 @@ import software.xdev.eclipse.store.afs.ibm.cos.types.CosConnector;
 
 
 @SuppressWarnings("checkstyle:MagicNumber")
-public final class App
+public final class Application
 {
 	private static final String COS_ENDPOINT = ""; // eg "https://s3.us.cloud-object-storage.appdomain.cloud"
 	private static final String COS_API_KEY_ID = ""; // eg "0viPHOY7LbLNa9eLftrtHPpTjoGv6hbLD1QalRXikliJ"
@@ -30,7 +30,7 @@ public final class App
 	private static final String COS_BUCKET_LOCATION = ""; // eg "us"
 	private static final String BUCKET_NAME = "";
 	
-	private static final Logger LOG = LoggerFactory.getLogger(App.class);
+	private static final Logger LOG = LoggerFactory.getLogger(Application.class);
 	
 	/**
 	 * This function connects to the IBM COS and writes one million String-Entries on it.
@@ -92,7 +92,7 @@ public final class App
 		return build;
 	}
 	
-	private App()
+	private Application()
 	{
 	}
 }
