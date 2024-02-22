@@ -50,7 +50,7 @@
 
 		<ibm.java.sdk.version>2.13.3</ibm.java.sdk.version>
 		<org.eclipse.store.version>1.1.0</org.eclipse.store.version>
-		<org.eclipse.serializer.version>1.1.0</org.eclipse.serializer.version>
+		<org.eclipse.serializer.version>1.2.0</org.eclipse.serializer.version>
 	</properties>
 
 	<dependencies>
