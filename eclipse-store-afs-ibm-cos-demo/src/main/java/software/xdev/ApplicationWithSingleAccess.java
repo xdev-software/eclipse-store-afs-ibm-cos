@@ -37,11 +37,11 @@ public final class ApplicationWithSingleAccess
 	/**
 	 * This function connects to the IBM COS and writes one million String-Entries on it.
 	 */
-	public static void main(final String[] args)
+	public static void main(final String[] args) throws InterruptedException
 	{
 		final AmazonS3 client = createClient(COS_API_KEY_ID, COS_SERVICE_CRN, COS_ENDPOINT, COS_BUCKET_LOCATION);
 		try(final SingleAccessManager accessManager = new SingleAccessManager(
-			new AccessConfiguration(COS_BUCKET_LOCATION),
+			new AccessConfiguration(BUCKET_NAME),
 			client))
 		{
 			accessManager.waitForAndReserveSingleAccess();
@@ -56,8 +56,11 @@ public final class ApplicationWithSingleAccess
 				do
 				{
 					i++;
-					stringList.add(String.format("Number %d written by client %d", i, pid));
+					final String newData = String.format("Number %d written by client %d", i, pid);
+					stringList.add(newData);
 					storageManager.store(stringList);
+					LOG.info("Wrote new Data: {}", newData);
+					Thread.sleep(100);
 				}
 				while(!Thread.interrupted());
 				LOG.info("Process terminated.");

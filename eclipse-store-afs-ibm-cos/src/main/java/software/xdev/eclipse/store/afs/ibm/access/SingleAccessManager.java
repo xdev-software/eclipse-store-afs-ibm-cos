@@ -1,15 +1,19 @@
 package software.xdev.eclipse.store.afs.ibm.access;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.stream.Collectors;
 
 import org.eclipse.serializer.util.logging.Logging;
 import org.slf4j.Logger;
 
 import com.ibm.cloud.objectstorage.services.s3.AmazonS3;
+import com.ibm.cloud.objectstorage.services.s3.model.S3ObjectSummary;
 
 
 public class SingleAccessManager implements AutoCloseable
@@ -20,6 +24,7 @@ public class SingleAccessManager implements AutoCloseable
 	private final AccessConfiguration configuration;
 	private final CosAccessCommunicator communicator;
 	private Timer terminateAccessCheckTimer;
+	private Timer keepAliveTokenTimer;
 	
 	private AccessToken token;
 	
@@ -53,8 +58,31 @@ public class SingleAccessManager implements AutoCloseable
 			this.token = tempToken;
 			this.communicator.createEmptyFile(this.token.getFileName());
 			LOGGER.info("Created and written token {} to cloud.", this.token.getFileName());
+			this.startTokenKeepAlive(this.token);
 		}
 		return this.token;
+	}
+	
+	private void startTokenKeepAlive(final AccessToken token)
+	{
+		if(this.keepAliveTokenTimer != null)
+		{
+			throw new RuntimeException("May not start multiple token keep alive timers!");
+		}
+		final TimerTask keepAliveTokenTask = new TimerTask()
+		{
+			@Override
+			public void run()
+			{
+				SingleAccessManager.this.communicator.createEmptyFile(token.getFileName());
+				LOGGER.debug("Touched keep alive token.");
+			}
+		};
+		this.keepAliveTokenTimer = new Timer("KeepAliveTokenForEclipseStoreIbmCos");
+		this.keepAliveTokenTimer.scheduleAtFixedRate(
+			keepAliveTokenTask,
+			this.configuration.getKeepAliveIntervalForToken(),
+			this.configuration.getKeepAliveIntervalForToken());
 	}
 	
 	public void releaseToken()
@@ -70,18 +98,27 @@ public class SingleAccessManager implements AutoCloseable
 		final String tokenFileName = token.getFileName();
 		this.communicator.deleteFile(tokenFileName);
 		this.token = null;
+		if(this.keepAliveTokenTimer != null)
+		{
+			this.keepAliveTokenTimer.cancel();
+			this.keepAliveTokenTimer = null;
+		}
 		LOGGER.info("Released access token {}", tokenFileName);
 	}
 	
 	public AccessToken waitForAndReserveSingleAccess()
 	{
-		LOGGER.info("Waiting for single access...");
 		final AccessToken newToken = this.createToken();
 		try
 		{
-			while(this.checkIfOtherTokensExist() && !Thread.interrupted())
+			if(this.checkIfOtherTokensExistAndDeleteInvalidTokens())
 			{
-				Thread.sleep(this.configuration.getCheckIntervalForSingleAccess());
+				LOGGER.info("Active access from different client found. Waiting for single access...");
+				do
+				{
+					Thread.sleep(this.configuration.getCheckIntervalForSingleAccess());
+				}
+				while(this.checkIfOtherTokensExistAndDeleteInvalidTokens() && !Thread.interrupted());
 			}
 			LOGGER.info("Received and reserved single access.");
 		}
@@ -96,11 +133,47 @@ public class SingleAccessManager implements AutoCloseable
 		return newToken;
 	}
 	
-	private boolean checkIfOtherTokensExist()
+	private boolean checkIfOtherTokensExistAndDeleteInvalidTokens()
 	{
-		return this.communicator
-			.getExistingFilesWithPrefix().stream()
-			.anyMatch(fileName -> !fileName.equals(this.token.getFileName()));
+		final List<S3ObjectSummary> existingFilesWithPrefix = this.communicator
+			.getExistingFilesWithPrefix()
+			.stream()
+			.filter(this::isNotThisTokenFile)
+			.collect(Collectors.toList());
+		
+		final List<S3ObjectSummary> oldTokens =
+			existingFilesWithPrefix
+				.stream()
+				.filter(this::isOldTokenFile)
+				.collect(Collectors.toList());
+		
+		if(!oldTokens.isEmpty())
+		{
+			oldTokens.forEach(oldTokenS3ObjectSummary ->
+			{
+				this.communicator.deleteFile(oldTokenS3ObjectSummary.getKey());
+				LOGGER.info(String.format("Deleted old token %s", oldTokenS3ObjectSummary.getKey()));
+			});
+			
+			existingFilesWithPrefix.removeAll(oldTokens);
+		}
+		
+		return !existingFilesWithPrefix.isEmpty();
+	}
+	
+	private boolean isNotThisTokenFile(final S3ObjectSummary s3ObjectSummary)
+	{
+		return !s3ObjectSummary.getKey().equals(this.token.getFileName());
+	}
+	
+	private boolean isOldTokenFile(final S3ObjectSummary s3ObjectSummary)
+	{
+		final Calendar deadlineForOldToken = Calendar.getInstance();
+		deadlineForOldToken.add(
+			Calendar.MILLISECOND,
+			(int)(this.configuration.getKeepAliveIntervalForToken() * -2 - 1));
+		final Date deadlineForOldTokenDate = deadlineForOldToken.getTime();
+		return s3ObjectSummary.getLastModified().before(deadlineForOldTokenDate);
 	}
 	
 	public void registerTerminateAccessListener(final TerminateAccessListener listener)
@@ -116,7 +189,7 @@ public class SingleAccessManager implements AutoCloseable
 				public void run()
 				{
 					LOGGER.debug("Checking if other tokens exist...");
-					if(SingleAccessManager.this.checkIfOtherTokensExist())
+					if(SingleAccessManager.this.checkIfOtherTokensExistAndDeleteInvalidTokens())
 					{
 						LOGGER.debug("Other tokens do exist. Notifying all listeners.");
 						SingleAccessManager.this.listeners.forEach(TerminateAccessListener::accessTerminationRequested);
