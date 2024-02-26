@@ -17,21 +17,19 @@ package software.xdev.eclipse.store.afs.ibm.cos.types;
 
 import org.eclipse.serializer.afs.types.AFileSystem;
 import org.eclipse.serializer.configuration.types.Configuration;
+import org.eclipse.serializer.configuration.types.ConfigurationBasedCreator;
 import org.eclipse.store.afs.blobstore.types.BlobStoreFileSystem;
 
-import com.ibm.cloud.objectstorage.client.builder.AwsClientBuilder;
 import com.ibm.cloud.objectstorage.services.s3.AmazonS3;
-import com.ibm.cloud.objectstorage.services.s3.AmazonS3Client;
-import com.ibm.cloud.objectstorage.services.s3.AmazonS3ClientBuilder;
 
-import software.xdev.eclipse.store.afs.ibm.types.IbmFileSystemCreator;
+import software.xdev.eclipse.store.afs.ibm.CosClientCreator;
 
 
-public class CosFileSystemCreator extends IbmFileSystemCreator
+public class CosFileSystemCreator extends ConfigurationBasedCreator.Abstract<AFileSystem>
 {
 	public CosFileSystemCreator()
 	{
-		super();
+		super(AFileSystem.class);
 	}
 	
 	@Override
@@ -39,16 +37,7 @@ public class CosFileSystemCreator extends IbmFileSystemCreator
 		final Configuration configuration
 	)
 	{
-		final Configuration s3Configuration = configuration.child("ibm.cos");
-		if(s3Configuration == null)
-		{
-			return null;
-		}
-		
-		final AwsClientBuilder<AmazonS3ClientBuilder, AmazonS3> clientBuilder = AmazonS3Client.builder();
-		this.populateBuilder(clientBuilder, s3Configuration);
-		
-		final AmazonS3 client = clientBuilder.build();
+		final AmazonS3 client = CosClientCreator.createClient(configuration);
 		final boolean cache = configuration.optBoolean("cache").orElse(true);
 		final CosConnector connector = cache
 			? CosConnector.Caching(client)

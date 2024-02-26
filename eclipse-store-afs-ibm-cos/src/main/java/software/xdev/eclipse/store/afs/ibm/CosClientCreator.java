@@ -1,42 +1,39 @@
-/*
- * Copyright © 2023 XDEV Software (https://xdev.software)
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-package software.xdev.eclipse.store.afs.ibm.types;
+package software.xdev.eclipse.store.afs.ibm;
 
 import java.util.Optional;
 
-import org.eclipse.serializer.afs.types.AFileSystem;
 import org.eclipse.serializer.configuration.exceptions.ConfigurationException;
 import org.eclipse.serializer.configuration.types.Configuration;
-import org.eclipse.serializer.configuration.types.ConfigurationBasedCreator;
 
 import com.ibm.cloud.objectstorage.auth.BasicAWSCredentials;
 import com.ibm.cloud.objectstorage.auth.DefaultAWSCredentialsProviderChain;
 import com.ibm.cloud.objectstorage.auth.EnvironmentVariableCredentialsProvider;
 import com.ibm.cloud.objectstorage.auth.SystemPropertiesCredentialsProvider;
 import com.ibm.cloud.objectstorage.client.builder.AwsClientBuilder;
+import com.ibm.cloud.objectstorage.services.s3.AmazonS3;
+import com.ibm.cloud.objectstorage.services.s3.AmazonS3Client;
+import com.ibm.cloud.objectstorage.services.s3.AmazonS3ClientBuilder;
 
 
-public abstract class IbmFileSystemCreator extends ConfigurationBasedCreator.Abstract<AFileSystem>
+public final class CosClientCreator
 {
-	protected IbmFileSystemCreator()
+	public static AmazonS3 createClient(
+		final Configuration configuration
+	)
 	{
-		super(AFileSystem.class);
+		final Configuration s3Configuration = configuration.child("ibm.cos");
+		if(s3Configuration == null)
+		{
+			return null;
+		}
+		
+		final AwsClientBuilder<AmazonS3ClientBuilder, AmazonS3> clientBuilder = AmazonS3Client.builder();
+		configureClient(clientBuilder, s3Configuration);
+		
+		return clientBuilder.build();
 	}
 	
-	protected void populateBuilder(
+	private static void configureClient(
 		final AwsClientBuilder<?, ?> clientBuilder,
 		final Configuration configuration
 	)

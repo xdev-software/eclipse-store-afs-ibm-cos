@@ -17,11 +17,13 @@ import com.ibm.cloud.objectstorage.oauth.BasicIBMOAuthCredentials;
 import com.ibm.cloud.objectstorage.services.s3.AmazonS3;
 import com.ibm.cloud.objectstorage.services.s3.AmazonS3ClientBuilder;
 
+import software.xdev.eclipse.store.afs.ibm.access.AccessConfiguration;
+import software.xdev.eclipse.store.afs.ibm.access.SingleAccessManager;
 import software.xdev.eclipse.store.afs.ibm.cos.types.CosConnector;
 
 
 @SuppressWarnings("checkstyle:MagicNumber")
-public final class Application
+public final class ApplicationWithSingleAccess
 {
 	private static final String COS_ENDPOINT = ""; // eg "https://s3.us.cloud-object-storage.appdomain.cloud"
 	private static final String COS_API_KEY_ID = ""; // eg "0viPHOY7LbLNa9eLftrtHPpTjoGv6hbLD1QalRXikliJ"
@@ -30,45 +32,45 @@ public final class Application
 	private static final String COS_BUCKET_LOCATION = ""; // eg "us"
 	private static final String BUCKET_NAME = "";
 	
-	private static final Logger LOG = LoggerFactory.getLogger(Application.class);
+	private static final Logger LOG = LoggerFactory.getLogger(ApplicationWithSingleAccess.class);
 	
 	/**
 	 * This function connects to the IBM COS and writes one million String-Entries on it.
 	 */
 	public static void main(final String[] args)
 	{
-		final List<String> stringList = new ArrayList<>();
-		LOG.info("List size before loading: {}", stringList.size());
-		try(final EmbeddedStorageManager manager = getStorageManager(stringList))
+		final AmazonS3 client = createClient(COS_API_KEY_ID, COS_SERVICE_CRN, COS_ENDPOINT, COS_BUCKET_LOCATION);
+		try(final SingleAccessManager accessManager = new SingleAccessManager(
+			new AccessConfiguration(COS_BUCKET_LOCATION),
+			client))
 		{
-			LOG.info("List size after loading: {}", stringList.size());
-			for(int i = 0; i < 1_000_000; i++)
+			accessManager.waitForAndReserveSingleAccess();
+			final List<String> stringList = new ArrayList<>();
+			LOG.info("List size before loading: {}", stringList.size());
+			final long pid = ProcessHandle.current().pid();
+			LOG.info("Process ID: {}", pid);
+			try(final EmbeddedStorageManager storageManager = getStorageManager(stringList, client))
 			{
-				stringList.add("Test" + i);
+				accessManager.registerTerminateAccessListener(() -> System.exit(0));
+				int i = 0;
+				do
+				{
+					i++;
+					stringList.add(String.format("Number %d written by client %d", i, pid));
+					storageManager.store(stringList);
+				}
+				while(!Thread.interrupted());
+				LOG.info("Process terminated.");
 			}
-			manager.store(stringList);
-			LOG.info("List size after storing new entities: {}", stringList.size());
 		}
 	}
 	
-	public static EmbeddedStorageManager getStorageManager(final Object root)
+	public static EmbeddedStorageManager getStorageManager(final Object root, final AmazonS3 client)
 	{
-		final AmazonS3 client = createClient(COS_API_KEY_ID, COS_SERVICE_CRN, COS_ENDPOINT, COS_BUCKET_LOCATION);
-		
-		LOG.info("Start creating file system");
-		final BlobStoreFileSystem cloudFileSystem = BlobStoreFileSystem.New(
-			// use caching connector
-			CosConnector.Caching(client)
-		);
-		LOG.info("Finished creating file system");
-		
-		LOG.info("Starting storage manager");
-		final EmbeddedStorageManager storageManager = EmbeddedStorage.start(
+		final BlobStoreFileSystem cloudFileSystem = BlobStoreFileSystem.New(CosConnector.Caching(client));
+		return EmbeddedStorage.start(
 			root,
 			cloudFileSystem.ensureDirectoryPath(BUCKET_NAME));
-		LOG.info("Finished storage manager");
-		
-		return storageManager;
 	}
 	
 	public static AmazonS3 createClient(
@@ -77,18 +79,15 @@ public final class Application
 		final String endpointUrl,
 		final String location)
 	{
-		LOG.info("Start creating client");
 		final AWSCredentials credentials = new BasicIBMOAuthCredentials(apiKey, serviceInstanceId);
 		final ClientConfiguration clientConfig = new ClientConfiguration().withRequestTimeout(-1);
 		clientConfig.setUseTcpKeepAlive(true);
 		
-		final AmazonS3 build = AmazonS3ClientBuilder.standard()
+		return AmazonS3ClientBuilder.standard()
 			.withCredentials(new AWSStaticCredentialsProvider(credentials))
 			.withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(endpointUrl, location))
 			.withPathStyleAccessEnabled(true)
 			.withClientConfiguration(clientConfig)
 			.build();
-		LOG.info("Finished creating client");
-		return build;
 	}
 }
