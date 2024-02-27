@@ -15,13 +15,11 @@
  */
 package software.xdev.eclipse.store.afs.ibm.access;
 
-import java.util.List;
+import java.time.Duration;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import org.eclipse.store.storage.types.StorageManager;
@@ -33,6 +31,7 @@ import org.mockito.Mockito;
 
 class SingleAccessManagerTest
 {
+	public static final int KEEP_ALIVE_INTERVAL_FOR_TOKEN = 100;
 	private AccessConfiguration configuration;
 	private CosAccessCommunicatorLocal communicator;
 	
@@ -40,11 +39,11 @@ class SingleAccessManagerTest
 	void init()
 	{
 		this.configuration = new AccessConfiguration(
-			"SOME-PREFIX",
-		"TEST-BUCKET",
-		10,
-		10,
-		1000);
+			"PREFIX-",
+			"TEST-BUCKET",
+			10,
+			10,
+			KEEP_ALIVE_INTERVAL_FOR_TOKEN);
 		this.communicator = new CosAccessCommunicatorLocal(this.configuration);
 	}
 	
@@ -80,7 +79,7 @@ class SingleAccessManagerTest
 	{
 		try(final SingleAccessManager manager1 = this.createManager())
 		{
-			Assertions.assertNotNull(manager1.waitForAndReserveSingleAccess());
+			Assertions.assertTimeout(Duration.ofMillis(100), manager1::waitForAndReserveSingleAccess);
 		}
 	}
 	
@@ -92,6 +91,7 @@ class SingleAccessManagerTest
 			manager1.waitForAndReserveSingleAccess();
 			try(final SingleAccessManager manager2 = this.createManager())
 			{
+				final long delay = 100L;
 				final Timer timer = new Timer();
 				timer.schedule(
 					new TimerTask()
@@ -102,41 +102,56 @@ class SingleAccessManagerTest
 							manager1.close();
 						}
 					},
-					100L
+					delay
 				);
 				Assertions.assertFalse(manager2.isSingleAccessAvailable());
-				Assertions.assertNotNull(manager2.waitForAndReserveSingleAccess());
+				Assertions.assertTimeout(Duration.ofMillis(delay + 1000), manager2::waitForAndReserveSingleAccess);
 				Assertions.assertTrue(manager2.isSingleAccessAvailable());
 			}
 		}
 	}
 	
+	/**
+	 * Starts a lot of threads which all want the same, single access. If they all finish without deadlock and no
+	 * Access-files are left, the test is successful.
+	 */
 	@Test
-	void waitForAndReserveSingleAccess_WaitingNeeded_3Manager() throws InterruptedException
+	void waitForAndReserveSingleAccess_WaitingNeeded_ManyManagers()
 	{
 		final ExecutorService executor = Executors.newFixedThreadPool(10);
 		
-		final List<? extends Future<?>> waitingManagers = IntStream.rangeClosed(1, 100).mapToObj(
-			i -> this.createManager()
-		).map(
-			manager ->
-				executor.submit(() -> {
-					manager.registerTerminateAccessListener(() ->
-						manager.close());
-					manager.waitForAndReserveSingleAccess();
-				})
-		).collect(Collectors.toList());
+		IntStream
+			.rangeClosed(1, KEEP_ALIVE_INTERVAL_FOR_TOKEN)
+			.mapToObj(
+				i ->
+					executor.submit(() -> {
+						final SingleAccessManager manager = this.createManager();
+						manager.registerTerminateAccessListener(manager::close);
+						manager.waitForAndReserveSingleAccess();
+					}))
+			.forEach(
+				future ->
+					Assertions.assertTimeout(
+						Duration.ofSeconds(5),
+						() -> future.get())
+			);
 		
-		waitingManagers.forEach(future -> {
-			try
-			{
-				future.get();
-			}
-			catch(final Exception e)
-			{
-				throw new RuntimeException(e);
-			}
-		});
+		// Only the last manager is allowed to still have the AccessToken file
+		Assertions.assertEquals(1, this.communicator.getExistingFilesWithPrefix().
+			
+			size());
+	}
+	
+	@Test
+	void waitForAndReserveSingleAccess_IgnoringOldFiles()
+	{
+		this.communicator.createEmptyFile(this.configuration.getAccessFilePrefix() + "DUMMY");
+		try(final SingleAccessManager manager1 = this.createManager())
+		{
+			Assertions.assertTimeout(
+				Duration.ofMillis(KEEP_ALIVE_INTERVAL_FOR_TOKEN * 3),
+				manager1::waitForAndReserveSingleAccess);
+		}
 	}
 	
 	@Test
@@ -158,15 +173,13 @@ class SingleAccessManagerTest
 	@Test
 	void registerTerminateAccessListener()
 	{
-		final TerminateAccessListener accessListener = Mockito.mock(TerminateAccessListener.class);
 		try(final SingleAccessManager manager1 = this.createManager())
 		{
 			manager1.waitForAndReserveSingleAccess();
-			manager1.registerTerminateAccessListener(accessListener);
+			manager1.registerTerminateAccessListener(manager1::close);
 			try(final SingleAccessManager manager2 = this.createManager())
 			{
-				manager2.waitForAndReserveSingleAccess();
-				Mockito.verify(accessListener).accessTerminationRequested();
+				Assertions.assertTimeout(Duration.ofMillis(100), manager2::waitForAndReserveSingleAccess);
 			}
 		}
 	}

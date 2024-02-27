@@ -32,6 +32,9 @@ import com.ibm.cloud.objectstorage.services.s3.AmazonS3;
 import com.ibm.cloud.objectstorage.services.s3.model.S3ObjectSummary;
 
 
+/**
+ * Handles access to a single IBM Cos resource and ensures that only one process is using the resource.
+ */
 public class SingleAccessManager implements AutoCloseable
 {
 	private static final Logger LOGGER = Logging.getLogger(SingleAccessManager.class);
@@ -105,24 +108,20 @@ public class SingleAccessManager implements AutoCloseable
 	{
 		if(this.token != null)
 		{
+			this.closeKeepAliveTokenTimer();
 			final String tokenFileName = token.getFileName();
 			this.communicator.deleteFile(tokenFileName);
 			this.token = null;
-			if(this.keepAliveTokenTimer != null)
-			{
-				this.keepAliveTokenTimer.cancel();
-				this.keepAliveTokenTimer = null;
-			}
 			LOGGER.info("Released access token {}", tokenFileName);
 		}
 	}
 	
-	public boolean isSingleAccessAvailable()
+	public synchronized boolean isSingleAccessAvailable()
 	{
 		return !this.checkIfOtherTokensExistAndDeleteInvalidTokens();
 	}
 	
-	public AccessToken waitForAndReserveSingleAccess()
+	public synchronized AccessToken waitForAndReserveSingleAccess()
 	{
 		final AccessToken newToken = this.createToken();
 		try
@@ -134,7 +133,11 @@ public class SingleAccessManager implements AutoCloseable
 				{
 					Thread.sleep(this.configuration.getCheckIntervalForSingleAccess());
 				}
-				while(this.checkIfOtherTokensExistAndDeleteInvalidTokens() && !Thread.interrupted());
+				while(
+					this.checkIfOtherTokensExistAndDeleteInvalidTokens()
+						&& !Thread.interrupted()
+						&& this.token != null
+				);
 			}
 			LOGGER.info("Received and reserved single access.");
 		}
@@ -146,7 +149,7 @@ public class SingleAccessManager implements AutoCloseable
 			return null;
 		}
 		
-		return newToken;
+		return this.token;
 	}
 	
 	private boolean checkIfOtherTokensExistAndDeleteInvalidTokens()
@@ -196,19 +199,19 @@ public class SingleAccessManager implements AutoCloseable
 		return s3ObjectSummary.getLastModified().before(deadlineForOldTokenDate);
 	}
 	
-	public void shutdownStorageWhenAccessShouldTerminate(final StorageManager storage)
+	public synchronized void shutdownStorageWhenAccessShouldTerminate(final StorageManager storage)
 	{
 		this.registerTerminateAccessListener(
 			() ->
 			{
-				// Shutdown command is save to execute even with stores currently running.
+				// Shutdown command is safe to execute even with stores currently running.
 				storage.shutdown();
 				this.releaseToken(this.token);
 			}
 		);
 	}
 	
-	public void registerTerminateAccessListener(final TerminateAccessListener listener)
+	public synchronized void registerTerminateAccessListener(final TerminateAccessListener listener)
 	{
 		this.listeners.add(listener);
 		LOGGER.info("Registered new terminate access listener.");
@@ -248,10 +251,20 @@ public class SingleAccessManager implements AutoCloseable
 		}
 	}
 	
+	private void closeKeepAliveTokenTimer()
+	{
+		if(this.keepAliveTokenTimer != null)
+		{
+			this.keepAliveTokenTimer.cancel();
+			this.keepAliveTokenTimer = null;
+		}
+	}
+	
 	@Override
 	public void close()
 	{
 		this.closeTerminateAccessCheckTimer();
+		this.closeKeepAliveTokenTimer();
 		this.releaseToken(this.token);
 	}
 }
