@@ -1,3 +1,18 @@
+/*
+ * Copyright © 2023 XDEV Software (https://xdev.software)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package software.xdev.eclipse.store.afs.ibm.access;
 
 import java.util.ArrayList;
@@ -86,25 +101,25 @@ public class SingleAccessManager implements AutoCloseable
 			this.configuration.getKeepAliveIntervalForToken());
 	}
 	
-	public void releaseToken()
+	void releaseToken(final AccessToken token)
 	{
 		if(this.token != null)
 		{
-			this.releaseToken(this.token);
+			final String tokenFileName = token.getFileName();
+			this.communicator.deleteFile(tokenFileName);
+			this.token = null;
+			if(this.keepAliveTokenTimer != null)
+			{
+				this.keepAliveTokenTimer.cancel();
+				this.keepAliveTokenTimer = null;
+			}
+			LOGGER.info("Released access token {}", tokenFileName);
 		}
 	}
 	
-	public void releaseToken(final AccessToken token)
+	public boolean isSingleAccessAvailable()
 	{
-		final String tokenFileName = token.getFileName();
-		this.communicator.deleteFile(tokenFileName);
-		this.token = null;
-		if(this.keepAliveTokenTimer != null)
-		{
-			this.keepAliveTokenTimer.cancel();
-			this.keepAliveTokenTimer = null;
-		}
-		LOGGER.info("Released access token {}", tokenFileName);
+		return !this.checkIfOtherTokensExistAndDeleteInvalidTokens();
 	}
 	
 	public AccessToken waitForAndReserveSingleAccess()
@@ -164,6 +179,10 @@ public class SingleAccessManager implements AutoCloseable
 	
 	private boolean isNotThisTokenFile(final S3ObjectSummary s3ObjectSummary)
 	{
+		if(this.token == null)
+		{
+			return true;
+		}
 		return !s3ObjectSummary.getKey().equals(this.token.getFileName());
 	}
 	
@@ -184,7 +203,7 @@ public class SingleAccessManager implements AutoCloseable
 			{
 				// Shutdown command is save to execute even with stores currently running.
 				storage.shutdown();
-				this.token.close();
+				this.releaseToken(this.token);
 			}
 		);
 	}
@@ -206,6 +225,7 @@ public class SingleAccessManager implements AutoCloseable
 					{
 						LOGGER.debug("Other tokens do exist. Notifying all listeners.");
 						SingleAccessManager.this.listeners.forEach(TerminateAccessListener::accessTerminationRequested);
+						SingleAccessManager.this.closeTerminateAccessCheckTimer();
 					}
 				}
 			};
@@ -219,13 +239,19 @@ public class SingleAccessManager implements AutoCloseable
 		}
 	}
 	
-	@Override
-	public void close()
+	private void closeTerminateAccessCheckTimer()
 	{
 		if(this.terminateAccessCheckTimer != null)
 		{
 			this.terminateAccessCheckTimer.cancel();
+			this.terminateAccessCheckTimer = null;
 		}
-		this.releaseToken();
+	}
+	
+	@Override
+	public void close()
+	{
+		this.closeTerminateAccessCheckTimer();
+		this.releaseToken(this.token);
 	}
 }
