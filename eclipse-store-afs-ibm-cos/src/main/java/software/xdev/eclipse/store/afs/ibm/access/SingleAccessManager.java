@@ -10,6 +10,7 @@ import java.util.TimerTask;
 import java.util.stream.Collectors;
 
 import org.eclipse.serializer.util.logging.Logging;
+import org.eclipse.store.storage.types.StorageManager;
 import org.slf4j.Logger;
 
 import com.ibm.cloud.objectstorage.services.s3.AmazonS3;
@@ -174,6 +175,18 @@ public class SingleAccessManager implements AutoCloseable
 			(int)(this.configuration.getKeepAliveIntervalForToken() * -2 - 1));
 		final Date deadlineForOldTokenDate = deadlineForOldToken.getTime();
 		return s3ObjectSummary.getLastModified().before(deadlineForOldTokenDate);
+	}
+	
+	public void shutdownStorageWhenAccessShouldTerminate(final StorageManager storage)
+	{
+		this.registerTerminateAccessListener(
+			() ->
+			{
+				// Shutdown command is save to execute even with stores currently running.
+				storage.shutdown();
+				this.token.close();
+			}
+		);
 	}
 	
 	public void registerTerminateAccessListener(final TerminateAccessListener listener)

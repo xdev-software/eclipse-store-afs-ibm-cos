@@ -71,6 +71,11 @@
 			<version>${org.eclipse.store.version}</version>
 		</dependency>
 		<dependency>
+			<groupId>org.eclipse.store</groupId>
+			<artifactId>storage</artifactId>
+			<version>${org.eclipse.store.version}</version>
+		</dependency>
+		<dependency>
 			<groupId>org.eclipse.serializer</groupId>
 			<artifactId>configuration</artifactId>
 			<version>${org.eclipse.serializer.version}</version>

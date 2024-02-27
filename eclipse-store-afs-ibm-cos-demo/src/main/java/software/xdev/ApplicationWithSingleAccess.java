@@ -3,6 +3,7 @@ package software.xdev;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.serializer.persistence.exceptions.PersistenceExceptionTransfer;
 import org.eclipse.store.afs.blobstore.types.BlobStoreFileSystem;
 import org.eclipse.store.storage.embedded.types.EmbeddedStorage;
 import org.eclipse.store.storage.embedded.types.EmbeddedStorageManager;
@@ -46,25 +47,28 @@ public final class ApplicationWithSingleAccess
 		{
 			accessManager.waitForAndReserveSingleAccess();
 			final List<String> stringList = new ArrayList<>();
-			LOG.info("List size before loading: {}", stringList.size());
 			final long pid = ProcessHandle.current().pid();
 			LOG.info("Process ID: {}", pid);
 			try(final EmbeddedStorageManager storageManager = getStorageManager(stringList, client))
 			{
-				accessManager.registerTerminateAccessListener(() -> System.exit(0));
+				LOG.info("List size after loading: {}", stringList.size());
+				accessManager.shutdownStorageWhenAccessShouldTerminate(storageManager);
 				int i = 0;
 				do
 				{
 					i++;
-					final String newData = String.format("Number %d written by client %d", i, pid);
+					final String newData = String.format("Number %d written by client with pid %d", i, pid);
 					stringList.add(newData);
 					storageManager.store(stringList);
 					LOG.info("Wrote new Data: {}", newData);
-					Thread.sleep(100);
 				}
 				while(!Thread.interrupted());
-				LOG.info("Process terminated.");
 			}
+			catch(final PersistenceExceptionTransfer e)
+			{
+				LOG.warn("Storage was shutdown.");
+			}
+			LOG.info("Process terminated.");
 		}
 	}
 	
