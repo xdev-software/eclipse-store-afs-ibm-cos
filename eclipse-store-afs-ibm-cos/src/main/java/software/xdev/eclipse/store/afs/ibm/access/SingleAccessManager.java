@@ -51,6 +51,7 @@ public class SingleAccessManager implements AutoCloseable
 	private Timer keepAliveTokenTimer;
 	
 	private AccessToken token;
+	private final Random random = new Random();
 	
 	public SingleAccessManager(final AccessConfiguration configuration, final AmazonS3 client)
 	{
@@ -71,10 +72,9 @@ public class SingleAccessManager implements AutoCloseable
 		if(this.token == null)
 		{
 			AccessToken tempToken;
-			final Random random = new Random();
 			do
 			{
-				final Integer randomNumber = random.nextInt(1_000_000);
+				final Integer randomNumber = this.random.nextInt(1_000_000);
 				final String randomNumberFormatted = String.format("%06d", randomNumber);
 				tempToken = new AccessToken(this.configuration.getAccessFilePrefix() + randomNumberFormatted, this);
 			}
@@ -91,7 +91,7 @@ public class SingleAccessManager implements AutoCloseable
 	{
 		if(this.keepAliveTokenTimer != null)
 		{
-			throw new RuntimeException("May not start multiple token keep alive timers!");
+			throw new IllegalStateException("May not start multiple token keep alive timers!");
 		}
 		final TimerTask keepAliveTokenTask = new TimerTask()
 		{
@@ -155,7 +155,7 @@ public class SingleAccessManager implements AutoCloseable
 				LOGGER.info("Active access from different client found. Waiting for single access...");
 				do
 				{
-					Thread.sleep(this.configuration.getCheckIntervalForSingleAccess());
+					this.wait(this.configuration.getCheckIntervalForSingleAccess());
 				}
 				while(
 					this.checkIfOtherTokensExistAndDeleteInvalidTokens()
