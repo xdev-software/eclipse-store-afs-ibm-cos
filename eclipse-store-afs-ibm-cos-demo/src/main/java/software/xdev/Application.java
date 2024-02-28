@@ -91,4 +91,8 @@ public final class Application
 		LOG.info("Finished creating client");
 		return build;
 	}
+	
+	private Application()
+	{
+	}
 }

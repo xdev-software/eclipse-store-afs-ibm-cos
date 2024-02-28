@@ -3,7 +3,7 @@ package software.xdev;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.serializer.persistence.exceptions.PersistenceExceptionTransfer;
+import org.eclipse.serializer.persistence.exceptions.PersistenceException;
 import org.eclipse.store.afs.blobstore.types.BlobStoreFileSystem;
 import org.eclipse.store.storage.embedded.types.EmbeddedStorage;
 import org.eclipse.store.storage.embedded.types.EmbeddedStorageManager;
@@ -38,7 +38,7 @@ public final class ApplicationWithSingleAccess
 	/**
 	 * This function connects to the IBM COS and writes one million String-Entries on it.
 	 */
-	public static void main(final String[] args) throws InterruptedException
+	public static void main(final String[] args)
 	{
 		final AmazonS3 client = createClient(COS_API_KEY_ID, COS_SERVICE_CRN, COS_ENDPOINT, COS_BUCKET_LOCATION);
 		try(final SingleAccessManager accessManager = new SingleAccessManager(
@@ -64,7 +64,7 @@ public final class ApplicationWithSingleAccess
 				}
 				while(!Thread.interrupted());
 			}
-			catch(final PersistenceExceptionTransfer e)
+			catch(final PersistenceException e)
 			{
 				LOG.warn("Storage was shutdown.");
 			}
@@ -96,5 +96,9 @@ public final class ApplicationWithSingleAccess
 			.withPathStyleAccessEnabled(true)
 			.withClientConfiguration(clientConfig)
 			.build();
+	}
+	
+	private ApplicationWithSingleAccess()
+	{
 	}
 }

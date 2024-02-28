@@ -137,9 +137,7 @@ class SingleAccessManagerTest
 			);
 		
 		// Only the last manager is allowed to still have the AccessToken file
-		Assertions.assertEquals(1, this.communicator.getExistingFilesWithPrefix().
-			
-			size());
+		Assertions.assertEquals(1, this.communicator.getExistingFilesWithPrefix().size());
 	}
 	
 	@Test

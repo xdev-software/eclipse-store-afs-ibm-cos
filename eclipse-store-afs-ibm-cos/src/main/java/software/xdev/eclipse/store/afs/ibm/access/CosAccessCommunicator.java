@@ -34,7 +34,7 @@ public interface CosAccessCommunicator
 	
 	void deleteFile(final String fileName);
 	
-	public class Default implements CosAccessCommunicator
+	class Default implements CosAccessCommunicator
 	{
 		
 		private final AmazonS3 client;

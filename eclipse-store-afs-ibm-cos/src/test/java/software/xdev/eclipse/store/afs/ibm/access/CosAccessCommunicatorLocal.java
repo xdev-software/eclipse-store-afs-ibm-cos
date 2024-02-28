@@ -23,6 +23,10 @@ import java.util.stream.Collectors;
 import com.ibm.cloud.objectstorage.services.s3.model.S3ObjectSummary;
 
 
+/**
+ * A CosAccessCommunicator to locally test the COS access. Basically a mock from the actual
+ * {@link CosAccessCommunicator.Default}.
+ */
 public class CosAccessCommunicatorLocal implements CosAccessCommunicator
 {
 	private final AccessConfiguration configuration;

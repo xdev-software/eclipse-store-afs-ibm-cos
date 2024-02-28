@@ -34,6 +34,10 @@ import com.ibm.cloud.objectstorage.services.s3.model.S3ObjectSummary;
 
 /**
  * Handles access to a single IBM Cos resource and ensures that only one process is using the resource.
+ * <p>
+ *     Uses {@link Timer} and Token-Files in IBM COS to communicate. That's why it needs to
+ *     be closed.
+ * </p>
  */
 public class SingleAccessManager implements AutoCloseable
 {
@@ -104,6 +108,11 @@ public class SingleAccessManager implements AutoCloseable
 			this.configuration.getKeepAliveIntervalForToken());
 	}
 	
+	/**
+	 * Releases the token from IBM COS which basically removes the token file from the bucket.
+	 *
+	 * @param token to release
+	 */
 	void releaseToken(final AccessToken token)
 	{
 		if(this.token != null)
@@ -116,12 +125,26 @@ public class SingleAccessManager implements AutoCloseable
 		}
 	}
 	
-	public synchronized boolean isSingleAccessAvailable()
+	/**
+	 * Checks if other tokens exist and if this manager holds the single access.
+	 *
+	 * @return if this manager holds the single access
+	 */
+	public boolean isSingleAccessAvailable()
 	{
 		return !this.checkIfOtherTokensExistAndDeleteInvalidTokens();
 	}
 	
-	public synchronized AccessToken waitForAndReserveSingleAccess()
+	/**
+	 * Blocks the calling thread until this manager holds single access.
+	 * <p>
+	 * Periodically checks if there are other tokens and waits until there is no other token.
+	 * </p>
+	 *
+	 * @return the access token that reserves the single access. If the token is released, single access is released as
+	 * well.
+	 */
+	public AccessToken waitForAndReserveSingleAccess()
 	{
 		final AccessToken newToken = this.createToken();
 		try
@@ -199,7 +222,14 @@ public class SingleAccessManager implements AutoCloseable
 		return s3ObjectSummary.getLastModified().before(deadlineForOldTokenDate);
 	}
 	
-	public synchronized void shutdownStorageWhenAccessShouldTerminate(final StorageManager storage)
+	/**
+	 * Registers to listen on a terminate access request (which is basically another token getting created). If this
+	 * request is received the given storage is shutdown (which is a safe action while stores are beeing executed) and
+	 * the token is released.
+	 *
+	 * @param storage to shutdown
+	 */
+	public void shutdownStorageWhenAccessShouldTerminate(final StorageManager storage)
 	{
 		this.registerTerminateAccessListener(
 			() ->
@@ -211,7 +241,14 @@ public class SingleAccessManager implements AutoCloseable
 		);
 	}
 	
-	public synchronized void registerTerminateAccessListener(final TerminateAccessListener listener)
+	/**
+	 * Registers to listen on a terminate access request (which is basically another token getting created). If this
+	 * request is received the {@link TerminateAccessListener#accessTerminationRequested()} is executed.
+	 * <p>
+	 * It periodically checks if other tokens exist.
+	 * </p>
+	 */
+	public void registerTerminateAccessListener(final TerminateAccessListener listener)
 	{
 		this.listeners.add(listener);
 		LOGGER.info("Registered new terminate access listener.");
