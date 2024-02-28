@@ -5,8 +5,8 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>software.xdev</groupId>
-	<artifactId>standard-maven-template-root</artifactId>
-	<version>1.0.0-SNAPSHOT</version>
+	<artifactId>eclipse-store-afs-ibm-cos-root</artifactId>
+	<version>1.0.3-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<organization>
@@ -15,8 +15,8 @@
 	</organization>
 
 	<modules>
-		<module>standard-maven-template</module>
-		<module>standard-maven-template-demo</module>
+		<module>eclipse-store-afs-ibm-cos</module>
+		<module>eclipse-store-afs-ibm-cos-demo</module>
 	</modules>
 
 	<licenses>
