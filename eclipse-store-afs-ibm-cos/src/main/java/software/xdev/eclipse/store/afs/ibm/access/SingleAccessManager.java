@@ -131,7 +131,7 @@ public class SingleAccessManager implements AutoCloseable
 	 *
 	 * @return if this manager holds the single access
 	 */
-	public boolean isSingleAccessAvailable()
+	public synchronized boolean isSingleAccessAvailable()
 	{
 		return !this.checkIfOtherTokensExistAndDeleteInvalidTokens();
 	}
@@ -145,7 +145,7 @@ public class SingleAccessManager implements AutoCloseable
 	 * @return the access token that reserves the single access. If the token is released, single access is released as
 	 * well.
 	 */
-	public AccessToken waitForAndReserveSingleAccess()
+	public synchronized AccessToken waitForAndReserveSingleAccess()
 	{
 		final AccessToken newToken = this.createToken();
 		try
@@ -270,7 +270,7 @@ public class SingleAccessManager implements AutoCloseable
 	 * It periodically checks if other tokens exist.
 	 * </p>
 	 */
-	public void registerTerminateAccessListener(final TerminateAccessListener listener)
+	public synchronized void registerTerminateAccessListener(final TerminateAccessListener listener)
 	{
 		this.listeners.add(listener);
 		LOGGER.info("Registered new terminate access listener.");
@@ -320,7 +320,7 @@ public class SingleAccessManager implements AutoCloseable
 	}
 	
 	@Override
-	public void close()
+	public synchronized void close()
 	{
 		this.closeTerminateAccessCheckTimer();
 		this.closeKeepAliveTokenTimer();
