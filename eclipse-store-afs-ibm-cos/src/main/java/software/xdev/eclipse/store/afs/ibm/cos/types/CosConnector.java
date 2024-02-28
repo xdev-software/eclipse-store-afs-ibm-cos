@@ -56,7 +56,7 @@ import com.ibm.cloud.objectstorage.services.s3.model.S3ObjectSummary;
  * );
  * </pre>
  */
-@SuppressWarnings("checkstyle:MethodName") // MS Naming
+@SuppressWarnings({"checkstyle:MethodName", "java:S100"}) // EclipseStore Naming
 public interface CosConnector extends BlobStoreConnector
 {
 	/**

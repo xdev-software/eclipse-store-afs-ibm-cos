@@ -48,9 +48,9 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-		<ibm.java.sdk.version>2.13.3</ibm.java.sdk.version>
-		<org.eclipse.store.version>1.1.0</org.eclipse.store.version>
-		<org.eclipse.serializer.version>1.1.0</org.eclipse.serializer.version>
+		<ibm.java.sdk.version>2.13.4</ibm.java.sdk.version>
+		<org.eclipse.store.version>1.2.0</org.eclipse.store.version>
+		<org.eclipse.serializer.version>1.2.0</org.eclipse.serializer.version>
 	</properties>
 
 	<dependencies>
@@ -71,6 +71,11 @@
 			<version>${org.eclipse.store.version}</version>
 		</dependency>
 		<dependency>
+			<groupId>org.eclipse.store</groupId>
+			<artifactId>storage</artifactId>
+			<version>${org.eclipse.store.version}</version>
+		</dependency>
+		<dependency>
 			<groupId>org.eclipse.serializer</groupId>
 			<artifactId>configuration</artifactId>
 			<version>${org.eclipse.serializer.version}</version>
@@ -80,6 +85,26 @@
 			<artifactId>persistence</artifactId>
 			<version>${org.eclipse.serializer.version}</version>
 		</dependency>
+
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-engine</artifactId>
+			<version>5.10.2</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-core</artifactId>
+			<version>5.10.0</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-simple</artifactId>
+			<version>2.0.11</version>
+			<scope>test</scope>
+		</dependency>
+
 	</dependencies>
 
 	<repositories>
@@ -249,7 +274,7 @@
 							<dependency>
 								<groupId>com.puppycrawl.tools</groupId>
 								<artifactId>checkstyle</artifactId>
-								<version>10.12.7</version>
+								<version>10.13.0</version>
 							</dependency>
 						</dependencies>
 						<configuration>

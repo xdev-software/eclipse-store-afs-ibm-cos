@@ -25,7 +25,7 @@
 
 		<mainClass>software.xdev.Application</mainClass>
 
-		<org.eclipse.store.version>1.1.0</org.eclipse.store.version>
+		<org.eclipse.store.version>1.2.0</org.eclipse.store.version>
 	</properties>
 
 	<dependencies>
@@ -38,7 +38,7 @@
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-simple</artifactId>
-			<version>2.0.11</version>
+			<version>2.0.12</version>
 		</dependency>
 
 		<dependency>
@@ -106,7 +106,7 @@
 							<dependency>
 								<groupId>com.puppycrawl.tools</groupId>
 								<artifactId>checkstyle</artifactId>
-								<version>10.12.7</version>
+								<version>10.13.0</version>
 							</dependency>
 						</dependencies>
 						<configuration>
