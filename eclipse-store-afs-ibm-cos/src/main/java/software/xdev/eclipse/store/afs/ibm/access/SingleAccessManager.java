@@ -15,11 +15,11 @@
  */
 package software.xdev.eclipse.store.afs.ibm.access;
 
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.stream.Collectors;
@@ -51,7 +51,7 @@ public class SingleAccessManager implements AutoCloseable
 	private Timer keepAliveTokenTimer;
 	
 	private AccessToken token;
-	private final Random random = new Random();
+	private final SecureRandom random = new SecureRandom();
 	
 	public SingleAccessManager(final AccessConfiguration configuration, final AmazonS3 client)
 	{
