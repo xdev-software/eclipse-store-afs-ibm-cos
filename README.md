@@ -22,7 +22,7 @@ see [the demo application](eclipse-store-afs-ibm-cos-demo/src/main/java/software
 ## Supported EclipseStore versions
 
 The connector
-supports [version 1.2.0 of the EclipseStore](https://central.sonatype.com/artifact/org.eclipse.store/storage-embedded/01.02.00).
+supports [version 1.2.0 of the EclipseStore](https://central.sonatype.com/artifact/org.eclipse.store/storage-embedded/1.2.0).
 
 If you are using a different, not listed version of EclipseStore, this shouldn't be a problem.
 Usually you can simply exclude the dependent version of EclipseStore.
