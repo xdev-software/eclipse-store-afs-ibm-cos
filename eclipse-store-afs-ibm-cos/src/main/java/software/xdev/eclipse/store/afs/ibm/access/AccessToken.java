@@ -15,6 +15,10 @@
  */
 package software.xdev.eclipse.store.afs.ibm.access;
 
+/**
+ * Local representation of a s3 object to signal request for single access. Removes itself from IBM COS through the use
+ * of the given {@link SingleAccessManager}.
+ */
 public class AccessToken implements AutoCloseable
 {
 	private final String fileName;

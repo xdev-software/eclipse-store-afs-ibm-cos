@@ -24,19 +24,37 @@ import com.ibm.cloud.objectstorage.services.s3.model.AmazonS3Exception;
 import com.ibm.cloud.objectstorage.services.s3.model.S3ObjectSummary;
 
 
+/**
+ * Communicates with the IBM COS based on the AmazonS3-API.
+ */
 public interface CosAccessCommunicator
 {
+	/**
+	 * @return all s3 objects that start with the configured prefix.
+	 */
 	List<S3ObjectSummary> getExistingFilesWithPrefix();
 	
+	/**
+	 * @param fileName to check for.
+	 * @return true if a s3 object with the key of the given fileName exists
+	 */
 	boolean checkIfFileExists(final String fileName);
 	
+	/**
+	 * Creates an empty s3 object.
+	 * @param fileName of the s3 object to create.
+	 */
 	void createEmptyFile(final String fileName);
 	
+	/**
+	 * Deletes the s3 object with the given fileName as key.
+	 */
 	void deleteFile(final String fileName);
 	
 	class Default implements CosAccessCommunicator
 	{
 		
+		public static final int STATUS_CODE_FORBIDDEN = 403;
 		private final AmazonS3 client;
 		private final AccessConfiguration configuration;
 		
@@ -66,7 +84,7 @@ public interface CosAccessCommunicator
 			catch(final AmazonS3Exception e)
 			{
 				// This is a "feature": https://github.com/aws/aws-sdk-java/issues/974#issuecomment-272634444
-				if(e.getStatusCode() == 403)
+				if(e.getStatusCode() == STATUS_CODE_FORBIDDEN)
 				{
 					return false;
 				}

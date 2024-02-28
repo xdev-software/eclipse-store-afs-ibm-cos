@@ -23,6 +23,7 @@ import java.util.concurrent.Executors;
 import java.util.stream.IntStream;
 
 import org.eclipse.store.storage.types.StorageManager;
+import org.eclipse.store.storage.types.StorageWriteControllerReadOnlyMode;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -160,10 +161,29 @@ class SingleAccessManagerTest
 		{
 			manager1.waitForAndReserveSingleAccess();
 			manager1.shutdownStorageWhenAccessShouldTerminate(storageManager);
+			Mockito.verify(storageManager, Mockito.times(0)).shutdown();
 			try(final SingleAccessManager manager2 = this.createManager())
 			{
 				manager2.waitForAndReserveSingleAccess();
 				Mockito.verify(storageManager).shutdown();
+			}
+		}
+	}
+	
+	@Test
+	void setStorageToReadOnlyWhenAccessShouldTerminated()
+	{
+		final StorageWriteControllerReadOnlyMode writeController =
+			Mockito.mock(StorageWriteControllerReadOnlyMode.class);
+		try(final SingleAccessManager manager1 = this.createManager())
+		{
+			manager1.waitForAndReserveSingleAccess();
+			manager1.setStorageToReadOnlyWhenAccessShouldTerminated(writeController);
+			Mockito.verify(writeController, Mockito.times(0)).setReadOnly(true);
+			try(final SingleAccessManager manager2 = this.createManager())
+			{
+				manager2.waitForAndReserveSingleAccess();
+				Mockito.verify(writeController).setReadOnly(true);
 			}
 		}
 	}

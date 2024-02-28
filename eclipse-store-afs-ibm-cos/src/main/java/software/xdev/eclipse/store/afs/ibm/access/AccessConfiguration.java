@@ -18,6 +18,9 @@ package software.xdev.eclipse.store.afs.ibm.access;
 import java.util.concurrent.TimeUnit;
 
 
+/**
+ * Holds all the necessary configuration for the {@link SingleAccessManager}.
+ */
 public class AccessConfiguration
 {
 	public static final String DEFAULT_ACCESS_FILE_PREFIX = "ACCESS_FILE_";

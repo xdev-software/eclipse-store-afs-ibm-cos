@@ -15,8 +15,14 @@
  */
 package software.xdev.eclipse.store.afs.ibm.access;
 
+/**
+ * Listens for a terminate access request on IBM COS
+ */
 @FunctionalInterface
 public interface TerminateAccessListener
 {
+	/**
+	 * Is executed if the request to terminate access is received.
+	 */
 	void accessTerminationRequested();
 }

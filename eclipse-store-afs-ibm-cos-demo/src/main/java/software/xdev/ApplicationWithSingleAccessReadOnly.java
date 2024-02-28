@@ -5,8 +5,12 @@ import java.util.List;
 
 import org.eclipse.serializer.persistence.exceptions.PersistenceException;
 import org.eclipse.store.afs.blobstore.types.BlobStoreFileSystem;
-import org.eclipse.store.storage.embedded.types.EmbeddedStorage;
+import org.eclipse.store.storage.embedded.types.EmbeddedStorageFoundation;
 import org.eclipse.store.storage.embedded.types.EmbeddedStorageManager;
+import org.eclipse.store.storage.types.Storage;
+import org.eclipse.store.storage.types.StorageConfiguration;
+import org.eclipse.store.storage.types.StorageLiveFileProvider;
+import org.eclipse.store.storage.types.StorageWriteControllerReadOnlyMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,7 +27,10 @@ import software.xdev.eclipse.store.afs.ibm.access.SingleAccessManager;
 import software.xdev.eclipse.store.afs.ibm.cos.types.CosConnector;
 
 
-public final class ApplicationWithSingleAccess
+/**
+ * This class shows an example of how to use EclipseStore with ReadOnly capability for single access.
+ */
+public final class ApplicationWithSingleAccessReadOnly
 {
 	private static final String COS_ENDPOINT = ""; // eg "https://s3.us.cloud-object-storage.appdomain.cloud"
 	private static final String COS_API_KEY_ID = ""; // eg "0viPHOY7LbLNa9eLftrtHPpTjoGv6hbLD1QalRXikliJ"
@@ -32,9 +39,9 @@ public final class ApplicationWithSingleAccess
 	private static final String COS_BUCKET_LOCATION = ""; // eg "us"
 	private static final String BUCKET_NAME = "";
 	
-	private static final Logger LOG = LoggerFactory.getLogger(ApplicationWithSingleAccess.class);
+	private static final Logger LOG = LoggerFactory.getLogger(ApplicationWithSingleAccessReadOnly.class);
 	
-	public static void main(final String[] args)
+	public static void main(final String[] args) throws InterruptedException
 	{
 		final AmazonS3 client = createClient(COS_API_KEY_ID, COS_SERVICE_CRN, COS_ENDPOINT, COS_BUCKET_LOCATION);
 		try(final SingleAccessManager accessManager = new SingleAccessManager(
@@ -45,15 +52,34 @@ public final class ApplicationWithSingleAccess
 			final List<String> stringList = new ArrayList<>();
 			final long pid = ProcessHandle.current().pid();
 			LOG.info("Process ID: {}", pid);
-			try(final EmbeddedStorageManager storageManager = getStorageManager(stringList, client))
+			
+			final EmbeddedStorageFoundation<?> foundation = EmbeddedStorageFoundation.New();
+			
+			final StorageWriteControllerReadOnlyMode storageWriteController =
+				new StorageWriteControllerReadOnlyMode(foundation.getWriteController());
+			foundation.setWriteController(storageWriteController);
+			storageWriteController.setReadOnly(false);
+			
+			final BlobStoreFileSystem cloudFileSystem = BlobStoreFileSystem.New(CosConnector.Caching(client));
+			final StorageLiveFileProvider fileProvider =
+				Storage.FileProvider(cloudFileSystem.ensureDirectoryPath(BUCKET_NAME));
+			
+			foundation.setConfiguration(
+				StorageConfiguration.Builder()
+					.setStorageFileProvider(fileProvider)
+					.createConfiguration()
+			);
+			
+			try(final EmbeddedStorageManager storageManager = foundation.createEmbeddedStorageManager(stringList))
 			{
+				storageManager.start();
 				LOG.info("List size after loading: {}", stringList.size());
-				accessManager.shutdownStorageWhenAccessShouldTerminate(storageManager);
+				accessManager.setStorageToReadOnlyWhenAccessShouldTerminated(storageWriteController);
 				int i = 0;
 				while(true)
 				{
 					i++;
-					final String newData = String.format("Number %d written by client with pid %d", i, pid);
+					final String newData = String.format("Number %d written by client %d", i, pid);
 					stringList.add(newData);
 					storageManager.store(stringList);
 					LOG.info("Wrote new Data: {}", newData);
@@ -61,18 +87,9 @@ public final class ApplicationWithSingleAccess
 			}
 			catch(final PersistenceException e)
 			{
-				LOG.warn("Storage was shutdown.", e);
+				LOG.warn("Storage was set to read only and therefore shutdown .", e);
 			}
-			LOG.info("Process terminated.");
 		}
-	}
-	
-	public static EmbeddedStorageManager getStorageManager(final Object root, final AmazonS3 client)
-	{
-		final BlobStoreFileSystem cloudFileSystem = BlobStoreFileSystem.New(CosConnector.Caching(client));
-		return EmbeddedStorage.start(
-			root,
-			cloudFileSystem.ensureDirectoryPath(BUCKET_NAME));
 	}
 	
 	public static AmazonS3 createClient(
@@ -93,7 +110,7 @@ public final class ApplicationWithSingleAccess
 			.build();
 	}
 	
-	private ApplicationWithSingleAccess()
+	private ApplicationWithSingleAccessReadOnly()
 	{
 	}
 }

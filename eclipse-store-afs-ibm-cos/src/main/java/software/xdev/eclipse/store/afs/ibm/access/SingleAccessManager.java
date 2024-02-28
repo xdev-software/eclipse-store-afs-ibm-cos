@@ -26,6 +26,7 @@ import java.util.stream.Collectors;
 
 import org.eclipse.serializer.util.logging.Logging;
 import org.eclipse.store.storage.types.StorageManager;
+import org.eclipse.store.storage.types.StorageWriteControllerReadOnlyMode;
 import org.slf4j.Logger;
 
 import com.ibm.cloud.objectstorage.services.s3.AmazonS3;
@@ -212,6 +213,7 @@ public class SingleAccessManager implements AutoCloseable
 		return !s3ObjectSummary.getKey().equals(this.token.getFileName());
 	}
 	
+	@SuppressWarnings("MagicNumber")
 	private boolean isOldTokenFile(final S3ObjectSummary s3ObjectSummary)
 	{
 		final Calendar deadlineForOldToken = Calendar.getInstance();
@@ -220,6 +222,26 @@ public class SingleAccessManager implements AutoCloseable
 			(int)(this.configuration.getKeepAliveIntervalForToken() * -2 - 1));
 		final Date deadlineForOldTokenDate = deadlineForOldToken.getTime();
 		return s3ObjectSummary.getLastModified().before(deadlineForOldTokenDate);
+	}
+	
+	/**
+	 * Registers to listen on a terminate access request (which is basically another token getting created). If this
+	 * request is received the given WriteController is set to readonly and the token is released.
+	 * <p>
+	 * How to set up a storage with a {@link StorageWriteControllerReadOnlyMode}:
+	 * <a href="https://docs.eclipsestore.io/manual/storage/configuration/readonly.html">EclipseStore docs</a>
+	 * </p>
+	 *
+	 * @param storageWriteController to set to read only
+	 */
+	public void setStorageToReadOnlyWhenAccessShouldTerminated(
+		final StorageWriteControllerReadOnlyMode storageWriteController
+	)
+	{
+		this.registerTerminateAccessListener(() -> {
+			storageWriteController.setReadOnly(true);
+			this.releaseToken(this.token);
+		});
 	}
 	
 	/**

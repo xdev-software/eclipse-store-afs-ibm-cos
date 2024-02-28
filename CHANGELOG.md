@@ -1,3 +1,8 @@
+## 1.0.3
+
+* Using v1.2.0 of EclipseStore now
+* Added SingleAccessManager to handle single access with multiple instances on IBM COS
+
 ## 1.0.2
 
 * Using v1.1.0 of EclipseStore now

@@ -67,9 +67,7 @@ public final class CosClientCreator
 				throw new ConfigurationException(configuration);
 			}
 		});
-		configuration.opt("region").ifPresent(
-			region -> clientBuilder.setRegion(region)
-		);
+		configuration.opt("region").ifPresent(clientBuilder::setRegion);
 		configuration.opt("credentials.type").ifPresent(credentialsType ->
 		{
 			switch(credentialsType)
@@ -109,5 +107,9 @@ public final class CosClientCreator
 					// no credentials provider is used if not explicitly set
 			}
 		});
+	}
+	
+	private CosClientCreator()
+	{
 	}
 }
