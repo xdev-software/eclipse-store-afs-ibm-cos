@@ -41,7 +41,7 @@ public final class ApplicationWithSingleAccessReadOnly
 	
 	private static final Logger LOG = LoggerFactory.getLogger(ApplicationWithSingleAccessReadOnly.class);
 	
-	public static void main(final String[] args) throws InterruptedException
+	public static void main(final String[] args)
 	{
 		final AmazonS3 client = createClient(COS_API_KEY_ID, COS_SERVICE_CRN, COS_ENDPOINT, COS_BUCKET_LOCATION);
 		try(final SingleAccessManager accessManager = new SingleAccessManager(
