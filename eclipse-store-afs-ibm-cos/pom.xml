@@ -15,7 +15,7 @@
 
 	<scm>
 		<url>https://github.com/xdev-software/eclipse-store-afs-ibm-cos</url>
-		<connection>https://github.com/xdev-software/eclipse-store-afs-ibm-cos.git</connection>
+		<connection>scm:git:https://github.com/xdev-software/eclipse-store-afs-ibm-cos.git</connection>
 	</scm>
 
 	<inceptionYear>2023</inceptionYear>
@@ -143,6 +143,20 @@
 	</distributionManagement>
 
 	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-site-plugin</artifactId>
+					<version>4.0.0-M13</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-project-info-reports-plugin</artifactId>
+					<version>3.5.0</version>
+				</plugin>
+			</plugins>
+		</pluginManagement>
 		<plugins>
 			<plugin>
 				<groupId>com.mycila</groupId>
@@ -176,7 +190,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.12.1</version>
+				<version>3.13.0</version>
 				<configuration>
 					<release>${maven.compiler.release}</release>
 					<compilerArgs>
@@ -205,7 +219,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-source-plugin</artifactId>
-				<version>3.3.0</version>
+				<version>3.3.1</version>
 				<executions>
 					<execution>
 						<id>attach-sources</id>
@@ -226,7 +240,7 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-gpg-plugin</artifactId>
-						<version>3.1.0</version>
+						<version>3.2.3</version>
 						<executions>
 							<execution>
 								<id>sign-artifacts</id>
@@ -274,7 +288,7 @@
 							<dependency>
 								<groupId>com.puppycrawl.tools</groupId>
 								<artifactId>checkstyle</artifactId>
-								<version>10.13.0</version>
+								<version>10.15.0</version>
 							</dependency>
 						</dependencies>
 						<configuration>
