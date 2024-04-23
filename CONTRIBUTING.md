@@ -36,10 +36,7 @@ You should have the following things installed:
 ## Releasing [![Build](https://img.shields.io/github/actions/workflow/status/xdev-software/eclipse-store-afs-ibm-cos/release.yml?branch=master)](https://github.com/xdev-software/eclipse-store-afs-ibm-cos/actions/workflows/release.yml)
 
 Before releasing:
-
-* Consider doing
-  a [test-deployment](https://github.com/xdev-software/eclipse-store-afs-ibm-cos/actions/workflows/test-deploy.yml?query=branch%3Adevelop)
-  before actually releasing.
+* Consider doing a [test-deployment](https://github.com/xdev-software/eclipse-store-afs-ibm-cos/actions/workflows/test-deploy.yml?query=branch%3Adevelop) before actually releasing.
 * Check the [changelog](CHANGELOG.md)
 
 If the ``develop`` is ready for release, create a pull request to the ``master``-Branch and merge the changes
