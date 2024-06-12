@@ -54,7 +54,7 @@ class SingleAccessManagerTest
 	}
 	
 	@Test
-	void isSingleAccessAvailable_true()
+	void isSingleAccessAvailableTrue()
 	{
 		try(final SingleAccessManager manager1 = this.createManager())
 		{
@@ -63,7 +63,7 @@ class SingleAccessManagerTest
 	}
 	
 	@Test
-	void isSingleAccessAvailable_false()
+	void isSingleAccessAvailableFalse()
 	{
 		try(final SingleAccessManager manager1 = this.createManager())
 		{
@@ -76,7 +76,7 @@ class SingleAccessManagerTest
 	}
 	
 	@Test
-	void waitForAndReserveSingleAccess_NoWaitingNeeded()
+	void waitForAndReserveSingleAccessNoWaitingNeeded()
 	{
 		try(final SingleAccessManager manager1 = this.createManager())
 		{
@@ -85,7 +85,7 @@ class SingleAccessManagerTest
 	}
 	
 	@Test
-	void waitForAndReserveSingleAccess_WaitingNeeded()
+	void waitForAndReserveSingleAccessWaitingNeeded()
 	{
 		try(final SingleAccessManager manager1 = this.createManager())
 		{
@@ -117,7 +117,7 @@ class SingleAccessManagerTest
 	 * Access-files are left, the test is successful.
 	 */
 	@Test
-	void waitForAndReserveSingleAccess_WaitingNeeded_ManyManagers()
+	void waitForAndReserveSingleAccessWaitingNeededManyManagers()
 	{
 		final ExecutorService executor = Executors.newFixedThreadPool(10);
 		
@@ -142,7 +142,7 @@ class SingleAccessManagerTest
 	}
 	
 	@Test
-	void waitForAndReserveSingleAccess_IgnoringOldFiles()
+	void waitForAndReserveSingleAccessIgnoringOldFiles()
 	{
 		this.communicator.createEmptyFile(this.configuration.getAccessFilePrefix() + "DUMMY");
 		try(final SingleAccessManager manager1 = this.createManager())
