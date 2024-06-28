@@ -46,71 +46,47 @@ public interface CosPathValidator extends BlobStorePath.Validator
 		/*
 		 * https://cloud.ibm.com/docs/cloud-object-storage?topic=cloud-object-storage-compatibility-api-bucket-operations
 		 */
-		@SuppressWarnings("checkstyle:MagicNumber")
-		void validateBucketName(
-			final String bucketName
-		)
+		@SuppressWarnings({"checkstyle:MagicNumber", "PMD.NPathComplexity"})
+		void validateBucketName(final String bucketName)
 		{
 			final int length = bucketName.length();
-			if(length < 3
-				|| length > 63
-			)
+			if(length < 3 || length > 63)
 			{
-				throw new IllegalArgumentException(
-					"bucket name must be between 3 and 63 characters long"
-				);
+				throw new IllegalArgumentException("bucket name must be between 3 and 63 characters long");
 			}
-			if(!Pattern.matches(
-				"[a-z0-9\\.\\-]*",
-				bucketName
-			))
+			if(!Pattern.matches("[a-z0-9\\.\\-]*", bucketName))
 			{
 				throw new IllegalArgumentException(
 					"bucket name can contain only lowercase letters, numbers, periods (.) and dashes (-)"
 				);
 			}
-			if(!Pattern.matches(
-				"[a-z0-9]",
-				bucketName.substring(0, 1)
-			))
+			if(!Pattern.matches("[a-z0-9]", bucketName.substring(0, 1)))
 			{
-				throw new IllegalArgumentException(
-					"bucket name must begin with a lowercase letters or a number"
-				);
+				throw new IllegalArgumentException("bucket name must begin with a lowercase letters or a number");
 			}
 			if(bucketName.endsWith("-"))
 			{
-				throw new IllegalArgumentException(
-					"bucket name must not end with a dash (-)"
-				);
+				throw new IllegalArgumentException("bucket name must not end with a dash (-)");
 			}
 			if(bucketName.contains(".."))
 			{
-				throw new IllegalArgumentException(
-					"bucket name cannot have consecutive periods (..)"
-				);
+				throw new IllegalArgumentException("bucket name cannot have consecutive periods (..)");
 			}
 			if(bucketName.contains(".-")
 				|| bucketName.contains("-."))
 			{
-				throw new IllegalArgumentException(
-					"bucket name cannot have dashes adjacent to periods (.- or -.)"
-				);
+				throw new IllegalArgumentException("bucket name cannot have dashes adjacent to periods (.- or -.)");
 			}
 			if(Pattern.matches(
 				"^((0|1\\d?\\d?|2[0-4]?\\d?|25[0-5]?|[3-9]\\d?)\\.){3}(0|1\\d?\\d?|2[0-4]?\\d?|25[0-5]?|[3-9]\\d?)$",
 				bucketName
 			))
 			{
-				throw new IllegalArgumentException(
-					"bucket name must not be in an IP address style"
-				);
+				throw new IllegalArgumentException("bucket name must not be in an IP address style");
 			}
 			if(bucketName.startsWith("xn--"))
 			{
-				throw new IllegalArgumentException(
-					"bucket names must not start with 'xn--'"
-				);
+				throw new IllegalArgumentException("bucket names must not start with 'xn--'");
 			}
 		}
 	}
