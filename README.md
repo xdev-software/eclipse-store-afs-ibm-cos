@@ -1,5 +1,5 @@
 [![Latest version](https://img.shields.io/maven-central/v/software.xdev/eclipse-store-afs-ibm-cos?logo=apache%20maven)](https://mvnrepository.com/artifact/software.xdev/eclipse-store-afs-ibm-cos)
-[![Build](https://img.shields.io/github/actions/workflow/status/xdev-software/eclipse-store-afs-ibm-cos/checkBuild.yml?branch=develop)](https://github.com/xdev-software/eclipse-store-afs-ibm-cos/actions/workflows/checkBuild.yml?query=branch%3Adevelop)
+[![Build](https://img.shields.io/github/actions/workflow/status/xdev-software/eclipse-store-afs-ibm-cos/check-build.yml?branch=develop)](https://github.com/xdev-software/eclipse-store-afs-ibm-cos/actions/workflows/check-build.yml?query=branch%3Adevelop)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=xdev-software_eclipse-store-afs-ibm-cos&metric=alert_status)](https://sonarcloud.io/dashboard?id=xdev-software_eclipse-store-afs-ibm-cos)
 
 # eclipse-store-afs-ibm-cos
@@ -10,10 +10,8 @@ It uses the [IBM-provided Java SDK](https://github.com/IBM/ibm-cos-sdk-java).
 
 The connector works virtually identical to the [AWS S3 Connector](https://docs.eclipsestore.io/manual/storage/storage-targets/blob-stores/aws-s3.html) of EclipseStore but for IBM COS instead of AWS S3.
 
-To easily handle multiple processes using a single IBM COS instance, we implemented
-the [SingleAccessManager](eclipse-store-afs-ibm-cos/src/main/java/software/xdev/eclipse/store/afs/ibm/access/SingleAccessManager.java).
-It manages access by creating tokens and checking for other tokens. For more information
-see [the demo application](eclipse-store-afs-ibm-cos-demo/src/main/java/software/xdev/ApplicationWithSingleAccess.java).
+To easily handle multiple processes using a single IBM COS instance, we implemented the [SingleAccessManager](eclipse-store-afs-ibm-cos/src/main/java/software/xdev/eclipse/store/afs/ibm/access/SingleAccessManager.java).
+It manages access by creating tokens and checking for other tokens. For more information see [the demo application](eclipse-store-afs-ibm-cos-demo/src/main/java/software/xdev/ApplicationWithSingleAccess.java).
 
 ## Installation
 
@@ -21,22 +19,20 @@ see [the demo application](eclipse-store-afs-ibm-cos-demo/src/main/java/software
 
 ## Supported EclipseStore versions
 
-The connector
-supports [version 1.2.0 of the EclipseStore](https://central.sonatype.com/artifact/org.eclipse.store/storage-embedded/01.02.00).
+To find out the currently supported EclipseStore version of the connector have a look at its ``compile`` dependencies and search for ``org.eclipse.store``.<br/>
+This can be done inside an IDE (e.g. IntelliJ IDEA), via a Maven Web explorer (e.g. [mvnrepository.com](https://mvnrepository.com/artifact/software.xdev/eclipse-store-afs-ibm-cos)) or - for the latest version - have a look into the [``Dependencies``](./README.md#dependencies-and-licenses) section below.<br/>
+As an alternative you can also check the [changelog](./CHANGELOG.md).
 
-If you are using a different, not listed version of EclipseStore, this shouldn't be a problem.
+If you are using a different, not listed version of EclipseStore, this shouldn't be a problem.<br/>
 Usually you can simply exclude the dependent version of EclipseStore.
 
 ## Support
 
-If you need support as soon as possible, and you can't wait for any pull request, feel free to
-use [our support](https://xdev.software/en/services/support).
+If you need support as soon as possible, and you can't wait for any pull request, feel free to use [our support](https://xdev.software/en/services/support).
 
 ## Contributing
 
 See the [contributing guide](./CONTRIBUTING.md) for detailed instructions on how to get started with our project.
 
 ## Dependencies and Licenses
-
-View the [license of the current project](LICENSE) or
-the [summary including all dependencies](https://xdev-software.github.io/eclipse-store-afs-ibm-cos/dependencies/)
+View the [license of the current project](LICENSE) or the [summary including all dependencies](https://xdev-software.github.io/eclipse-store-afs-ibm-cos/dependencies)

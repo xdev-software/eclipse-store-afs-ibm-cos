@@ -1,0 +1,14 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "rebaseWhen": "behind-base-branch",
+  "packageRules": [
+    {
+      "description": "Ignore project internal dependencies",
+      "packagePattern": "^software.xdev:eclipse-store-afs-ibm-cos",
+      "datasources": [
+        "maven"
+      ],
+      "enabled": false
+    }
+  ]
+}
