@@ -1,5 +1,6 @@
 ## 1.0.4
 * Updated dependencies
+  * Updated EclipseStore to 1.3.2
 
 ## 1.0.3
 
