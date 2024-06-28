@@ -19,9 +19,10 @@ It manages access by creating tokens and checking for other tokens. For more inf
 
 ## Supported EclipseStore versions
 
-The connector supports [version 1.2.0 of the EclipseStore](https://central.sonatype.com/artifact/org.eclipse.store/storage-embedded/1.2.0).
+To find out the currently supported EclipseStore version of the connector have a look at its ``compile`` dependencies and search for ``org.eclipse.store``.<br/>
+This can be done inside an IDE (e.g. IntelliJ IDEA), via a Maven Web explorer (e.g. [mvnrepository.com](https://mvnrepository.com/artifact/software.xdev/eclipse-store-afs-ibm-cos)) or - for the latest version - have a look into the [``Dependencies``](./README.md#dependencies-and-licenses) section below.
 
-If you are using a different, not listed version of EclipseStore, this shouldn't be a problem.
+If you are using a different, not listed version of EclipseStore, this shouldn't be a problem.<br/>
 Usually you can simply exclude the dependent version of EclipseStore.
 
 ## Support
