@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<licensePluginReport goal="FORMAT" timestamp="1733135383180">
+    <module artifactId="eclipse-store-afs-ibm-cos" groupId="software.xdev" version="1.0.5"/>
+    <files>
+        <file path="src/main/java/software/xdev/eclipse/store/afs/ibm/CosClientCreator.java" result="NOOP"/>
+        <file path="src/main/java/software/xdev/eclipse/store/afs/ibm/access/AccessConfiguration.java" result="NOOP"/>
+        <file path="src/main/java/software/xdev/eclipse/store/afs/ibm/access/AccessToken.java" result="NOOP"/>
+        <file path="src/main/java/software/xdev/eclipse/store/afs/ibm/access/CosAccessCommunicator.java" result="NOOP"/>
+        <file path="src/main/java/software/xdev/eclipse/store/afs/ibm/access/SingleAccessManager.java" result="NOOP"/>
+        <file path="src/main/java/software/xdev/eclipse/store/afs/ibm/access/TerminateAccessListener.java" result="NOOP"/>
+        <file path="src/main/java/software/xdev/eclipse/store/afs/ibm/cos/types/CosConnector.java" result="NOOP"/>
+        <file path="src/main/java/software/xdev/eclipse/store/afs/ibm/cos/types/CosFileSystemCreator.java" result="NOOP"/>
+        <file path="src/main/java/software/xdev/eclipse/store/afs/ibm/cos/types/CosPathValidator.java" result="NOOP"/>
+        <file path="src/test/java/software/xdev/eclipse/store/afs/ibm/access/CosAccessCommunicatorLocal.java" result="NOOP"/>
+        <file path="src/test/java/software/xdev/eclipse/store/afs/ibm/access/SingleAccessManagerTest.java" result="NOOP"/>
+    </files>
+</licensePluginReport>
