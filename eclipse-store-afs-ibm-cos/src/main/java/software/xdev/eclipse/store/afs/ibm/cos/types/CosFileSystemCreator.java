@@ -29,7 +29,7 @@ public class CosFileSystemCreator extends ConfigurationBasedCreator.Abstract<AFi
 {
 	public CosFileSystemCreator()
 	{
-		super(AFileSystem.class);
+		super(AFileSystem.class, "ibm.cos");
 	}
 	
 	@Override
