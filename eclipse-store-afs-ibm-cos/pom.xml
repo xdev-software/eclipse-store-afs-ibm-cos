@@ -6,7 +6,7 @@
 
 	<groupId>software.xdev</groupId>
 	<artifactId>eclipse-store-afs-ibm-cos</artifactId>
-	<version>1.0.5</version>
+	<version>1.0.6-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<name>eclipse-store-afs-ibm-cos</name>
