@@ -23,7 +23,7 @@ To find out the currently supported EclipseStore version of the connector have a
 This can be done inside an IDE (e.g. IntelliJ IDEA), via a Maven Web explorer (e.g. [mvnrepository.com](https://mvnrepository.com/artifact/software.xdev/eclipse-store-afs-ibm-cos)) or - for the latest version - have a look into the [``Dependencies``](./README.md#dependencies-and-licenses) section below.<br/>
 As an alternative you can also check the [changelog](./CHANGELOG.md).
 
-If you are using a different, not listed version of EclipseStore, this shouldn't be a problem.<br/>
+If you are using a different, not listed version of EclipseStore this shouldn't be a problem.<br/>
 Usually you can simply exclude the dependent version of EclipseStore.
 
 ## Support
