@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<licensePluginReport goal="FORMAT" timestamp="1733136291850">
-    <module artifactId="eclipse-store-afs-ibm-cos" groupId="software.xdev" version="1.1.0"/>
+<licensePluginReport goal="FORMAT" timestamp="1734424397703">
+    <module artifactId="eclipse-store-afs-ibm-cos" groupId="software.xdev" version="1.1.1"/>
     <files>
         <file path="src/main/java/software/xdev/eclipse/store/afs/ibm/CosClientCreator.java" result="NOOP"/>
         <file path="src/main/java/software/xdev/eclipse/store/afs/ibm/access/AccessConfiguration.java" result="NOOP"/>
