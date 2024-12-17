@@ -1,3 +1,7 @@
+## 1.1.1
+* Updated dependencies
+  * Updated EclipseStore to 2.1.0
+
 ## 1.1.0
 * Updated to EclipseStore v2
 
