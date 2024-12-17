@@ -48,9 +48,11 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-		<ibm.java.sdk.version>2.13.6</ibm.java.sdk.version>
-		<org.eclipse.store.version>2.0.0</org.eclipse.store.version>
-		<org.eclipse.serializer.version>2.0.0</org.eclipse.serializer.version>
+		<ibm.java.sdk.version>2.14.0</ibm.java.sdk.version>
+
+		<org.eclipse.store.version>2.1.0</org.eclipse.store.version>
+
+		<org.eclipse.serializer.version>2.1.0</org.eclipse.serializer.version>
 	</properties>
 
 	<dependencies>
@@ -89,7 +91,7 @@
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-engine</artifactId>
-			<version>5.11.3</version>
+			<version>5.11.4</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -201,7 +203,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>3.11.1</version>
+				<version>3.11.2</version>
 				<executions>
 					<execution>
 						<id>attach-javadocs</id>
@@ -305,7 +307,7 @@
 							<dependency>
 								<groupId>com.puppycrawl.tools</groupId>
 								<artifactId>checkstyle</artifactId>
-								<version>10.20.2</version>
+								<version>10.21.0</version>
 							</dependency>
 						</dependencies>
 						<configuration>
