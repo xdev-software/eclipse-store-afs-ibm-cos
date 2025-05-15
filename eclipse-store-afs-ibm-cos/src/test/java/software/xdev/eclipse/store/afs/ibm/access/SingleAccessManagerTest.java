@@ -116,6 +116,7 @@ class SingleAccessManagerTest
 	 * Starts a lot of threads which all want the same, single access. If they all finish without deadlock and no
 	 * Access-files are left, the test is successful.
 	 */
+	@SuppressWarnings("PMD.LambdaCanBeMethodReference") // Multiple options for Lambda
 	@Test
 	void waitForAndReserveSingleAccessWaitingNeededManyManagers()
 	{
