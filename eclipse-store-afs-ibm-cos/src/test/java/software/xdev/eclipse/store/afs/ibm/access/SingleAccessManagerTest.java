@@ -116,7 +116,8 @@ class SingleAccessManagerTest
 	 * Starts a lot of threads which all want the same, single access. If they all finish without deadlock and no
 	 * Access-files are left, the test is successful.
 	 */
-	@SuppressWarnings("PMD.LambdaCanBeMethodReference") // Multiple options for Lambda
+	@SuppressWarnings({"PMD.LambdaCanBeMethodReference", "PMD.AvoidFutureGetWithoutTimeout"})
+	// Multiple options for Lambda
 	@Test
 	void waitForAndReserveSingleAccessWaitingNeededManyManagers()
 	{
@@ -140,6 +141,8 @@ class SingleAccessManagerTest
 		
 		// Only the last manager is allowed to still have the AccessToken file
 		Assertions.assertEquals(1, this.communicator.getExistingFilesWithPrefix().size());
+		
+		executor.shutdown();
 	}
 	
 	@Test

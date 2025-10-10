@@ -213,7 +213,7 @@ public class SingleAccessManager implements AutoCloseable
 		return !s3ObjectSummary.getKey().equals(this.token.getFileName());
 	}
 	
-	@SuppressWarnings("MagicNumber")
+	@SuppressWarnings({"MagicNumber", "PMD.ReplaceJavaUtilCalendar", "PMD.ReplaceJavaUtilDate"})
 	private boolean isOldTokenFile(final S3ObjectSummary s3ObjectSummary)
 	{
 		final Calendar deadlineForOldToken = Calendar.getInstance();

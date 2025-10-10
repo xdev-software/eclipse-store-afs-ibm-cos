@@ -53,6 +53,7 @@ public class CosAccessCommunicatorLocal implements CosAccessCommunicator
 		return this.existingFiles.containsKey(fileName);
 	}
 	
+	@SuppressWarnings("PMD.ReplaceJavaUtilDate")
 	@Override
 	public synchronized void createEmptyFile(final String fileName)
 	{

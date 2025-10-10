@@ -22,7 +22,10 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.nio.Buffer;
 import java.nio.ByteBuffer;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.WeakHashMap;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
@@ -95,6 +98,9 @@ public interface CosConnector extends BlobStoreConnector
 		extends BlobStoreConnector.Abstract<S3ObjectSummary>
 		implements CosConnector
 	{
+		private static final Map<String, Pattern> PREFIX_PATTERN_CACHE =
+			Collections.synchronizedMap(new WeakHashMap<>());
+		
 		public static final int READ_LIMIT = Integer.MAX_VALUE;
 		private final AmazonS3 s3;
 		
@@ -112,11 +118,14 @@ public interface CosConnector extends BlobStoreConnector
 			this.s3 = s3;
 		}
 		
+		@SuppressWarnings("PMD.AvoidRecompilingPatterns")
 		@Override
 		protected Stream<S3ObjectSummary> blobs(final BlobStorePath file)
 		{
 			final String prefix = toBlobKeyPrefix(file);
-			final Pattern pattern = Pattern.compile(blobKeyRegex(prefix));
+			final Pattern pattern = PREFIX_PATTERN_CACHE.computeIfAbsent(
+				prefix,
+				s -> Pattern.compile(blobKeyRegex(s)));
 			final ListObjectsV2Request request = new ListObjectsV2Request()
 				.withBucketName(file.container())
 				.withPrefix(prefix);

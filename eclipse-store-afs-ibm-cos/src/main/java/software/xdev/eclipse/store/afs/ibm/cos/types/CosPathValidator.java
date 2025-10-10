@@ -30,6 +30,14 @@ public interface CosPathValidator extends BlobStorePath.Validator
 	
 	class Default implements CosPathValidator
 	{
+		private static final Pattern LOWERCASE_NUMBERS_PERIOD_DASHES =
+			Pattern.compile("[a-z0-9\\.\\-]*");
+		private static final Pattern LOWERCASE_NUMBER =
+			Pattern.compile("[a-z0-9]");
+		private static final Pattern IP_ADDRESS_STYLE =
+			Pattern.compile(
+				"^((0|1\\d?\\d?|2[0-4]?\\d?|25[0-5]?|[3-9]\\d?)\\.){3}(0|1\\d?\\d?|2[0-4]?\\d?|25[0-5]?|[3-9]\\d?)$");
+		
 		Default()
 		{
 			super();
@@ -54,13 +62,13 @@ public interface CosPathValidator extends BlobStorePath.Validator
 			{
 				throw new IllegalArgumentException("bucket name must be between 3 and 63 characters long");
 			}
-			if(!Pattern.matches("[a-z0-9\\.\\-]*", bucketName))
+			if(!LOWERCASE_NUMBERS_PERIOD_DASHES.matcher(bucketName).matches())
 			{
 				throw new IllegalArgumentException(
 					"bucket name can contain only lowercase letters, numbers, periods (.) and dashes (-)"
 				);
 			}
-			if(!Pattern.matches("[a-z0-9]", bucketName.substring(0, 1)))
+			if(LOWERCASE_NUMBER.matcher(bucketName.substring(0, 1)).matches())
 			{
 				throw new IllegalArgumentException("bucket name must begin with a lowercase letters or a number");
 			}
@@ -77,10 +85,7 @@ public interface CosPathValidator extends BlobStorePath.Validator
 			{
 				throw new IllegalArgumentException("bucket name cannot have dashes adjacent to periods (.- or -.)");
 			}
-			if(Pattern.matches(
-				"^((0|1\\d?\\d?|2[0-4]?\\d?|25[0-5]?|[3-9]\\d?)\\.){3}(0|1\\d?\\d?|2[0-4]?\\d?|25[0-5]?|[3-9]\\d?)$",
-				bucketName
-			))
+			if(IP_ADDRESS_STYLE.matcher(bucketName).matches())
 			{
 				throw new IllegalArgumentException("bucket name must not be in an IP address style");
 			}
