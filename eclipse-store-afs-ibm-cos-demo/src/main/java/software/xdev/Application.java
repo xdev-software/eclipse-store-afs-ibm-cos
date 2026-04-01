@@ -37,17 +37,17 @@ public final class Application
 	 */
 	public static void main(final String[] args)
 	{
-		final List<String> stringList = new ArrayList<>();
-		LOG.info("List size before loading: {}", stringList.size());
-		try(final EmbeddedStorageManager manager = getStorageManager(stringList))
+		final List<String> testData = new ArrayList<>();
+		LOG.info("List size before loading: {}", testData.size());
+		try(final EmbeddedStorageManager manager = getStorageManager(testData))
 		{
-			LOG.info("List size after loading: {}", stringList.size());
+			LOG.info("List size after loading: {}", testData.size());
 			for(int i = 0; i < 1_000_000; i++)
 			{
-				stringList.add("Test" + i);
+				testData.add("Test" + i);
 			}
-			manager.store(stringList);
-			LOG.info("List size after storing new entities: {}", stringList.size());
+			manager.store(testData);
+			LOG.info("List size after storing new entities: {}", testData.size());
 		}
 	}
 	

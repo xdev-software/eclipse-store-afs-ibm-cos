@@ -15,8 +15,6 @@
  */
 package software.xdev.eclipse.store.afs.ibm;
 
-import java.util.Optional;
-
 import org.eclipse.serializer.configuration.exceptions.ConfigurationException;
 import org.eclipse.serializer.configuration.types.Configuration;
 
@@ -54,19 +52,10 @@ public final class CosClientCreator
 	)
 	{
 		configuration.opt("endpoint-override").ifPresent(endpointOverride ->
-		{
-			final Optional<String> region = configuration.opt("region");
-			if(region.isPresent())
-			{
-				clientBuilder.setEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(
-					endpointOverride,
-					region.get()));
-			}
-			else
-			{
-				throw new ConfigurationException(configuration);
-			}
-		});
+			clientBuilder.setEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(
+				endpointOverride,
+				configuration.opt("region")
+					.orElseThrow(() -> new ConfigurationException(configuration)))));
 		configuration.opt("region").ifPresent(clientBuilder::setRegion);
 		configuration.opt("credentials.type").ifPresent(credentialsType ->
 		{

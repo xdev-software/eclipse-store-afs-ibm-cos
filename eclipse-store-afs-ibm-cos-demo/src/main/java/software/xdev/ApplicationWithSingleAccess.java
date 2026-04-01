@@ -42,20 +42,20 @@ public final class ApplicationWithSingleAccess
 			client))
 		{
 			accessManager.waitForAndReserveSingleAccess();
-			final List<String> stringList = new ArrayList<>();
+			final List<String> testData = new ArrayList<>();
 			final long pid = ProcessHandle.current().pid();
 			LOG.info("Process ID: {}", pid);
-			try(final EmbeddedStorageManager storageManager = getStorageManager(stringList, client))
+			try(final EmbeddedStorageManager storageManager = getStorageManager(testData, client))
 			{
-				LOG.info("List size after loading: {}", stringList.size());
+				LOG.info("List size after loading: {}", testData.size());
 				accessManager.shutdownStorageWhenAccessShouldTerminate(storageManager);
 				int i = 0;
 				while(true)
 				{
 					i++;
 					final String newData = String.format("Number %d written by client with pid %d", i, pid);
-					stringList.add(newData);
-					storageManager.store(stringList);
+					testData.add(newData);
+					storageManager.store(testData);
 					LOG.info("Wrote new Data: {}", newData);
 				}
 			}

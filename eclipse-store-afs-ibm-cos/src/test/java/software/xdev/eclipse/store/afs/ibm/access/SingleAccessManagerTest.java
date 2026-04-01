@@ -32,7 +32,7 @@ import org.mockito.Mockito;
 
 class SingleAccessManagerTest
 {
-	public static final int KEEP_ALIVE_INTERVAL_FOR_TOKEN = 100;
+	static final int KEEP_ALIVE_INTERVAL_FOR_TOKEN = 100;
 	private AccessConfiguration configuration;
 	private CosAccessCommunicatorLocal communicator;
 	
@@ -48,7 +48,7 @@ class SingleAccessManagerTest
 		this.communicator = new CosAccessCommunicatorLocal(this.configuration);
 	}
 	
-	public SingleAccessManager createManager()
+	SingleAccessManager createManager()
 	{
 		return new SingleAccessManager(this.configuration, this.communicator);
 	}

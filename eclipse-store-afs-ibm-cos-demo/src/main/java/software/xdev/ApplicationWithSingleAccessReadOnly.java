@@ -49,7 +49,7 @@ public final class ApplicationWithSingleAccessReadOnly
 			client))
 		{
 			accessManager.waitForAndReserveSingleAccess();
-			final List<String> stringList = new ArrayList<>();
+			final List<String> testData = new ArrayList<>();
 			final long pid = ProcessHandle.current().pid();
 			LOG.info("Process ID: {}", pid);
 			
@@ -70,18 +70,18 @@ public final class ApplicationWithSingleAccessReadOnly
 					.createConfiguration()
 			);
 			
-			try(final EmbeddedStorageManager storageManager = foundation.createEmbeddedStorageManager(stringList))
+			try(final EmbeddedStorageManager storageManager = foundation.createEmbeddedStorageManager(testData))
 			{
 				storageManager.start();
-				LOG.info("List size after loading: {}", stringList.size());
+				LOG.info("List size after loading: {}", testData.size());
 				accessManager.setStorageToReadOnlyWhenAccessShouldTerminated(storageWriteController);
 				int i = 0;
 				while(true)
 				{
 					i++;
 					final String newData = String.format("Number %d written by client %d", i, pid);
-					stringList.add(newData);
-					storageManager.store(stringList);
+					testData.add(newData);
+					storageManager.store(testData);
 					LOG.info("Wrote new Data: {}", newData);
 				}
 			}
