@@ -54,7 +54,7 @@ public interface CosPathValidator extends BlobStorePath.Validator
 		/*
 		 * https://cloud.ibm.com/docs/cloud-object-storage?topic=cloud-object-storage-compatibility-api-bucket-operations
 		 */
-		@SuppressWarnings({"checkstyle:MagicNumber", "PMD.NPathComplexity"})
+		@SuppressWarnings({"checkstyle:MagicNumber"})
 		void validateBucketName(final String bucketName)
 		{
 			final int length = bucketName.length();
