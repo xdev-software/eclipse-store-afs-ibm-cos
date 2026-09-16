@@ -26,8 +26,7 @@ If you are using a different, not listed version of EclipseStore this shouldn't 
 Usually you can simply exclude the dependent version of EclipseStore.
 
 ## Support
-
-If you need support as soon as possible, and you can't wait for any pull request, feel free to use [our support](https://xdev.software/en/services/support).
+If you need support as soon as possible and you can't wait for any pull request, feel free to use [our support](https://xdev.software/en/services-products/support).
 
 ## Contributing
 
